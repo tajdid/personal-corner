@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — "Paper & forest" (docs/DESIGN.md).
+ * Tailwind's default palette and font stacks are cleared so only the
+ * approved tokens exist as utilities (e.g. bg-paper, text-ink, border-rule).
+ */
+@theme {
+  --color-*: initial;
+  --color-paper: #f3f0e9;  /* Background: warm paper base */
+  --color-ink: #171a17;    /* Primary text */
+  --color-muted: #6d706a;  /* Secondary text and metadata (4.42:1 on paper; below AA for small text) */
+  --color-rule: #dad8d0;   /* Restrained dividers */
+  --color-accent: #123e30; /* Forest green, used sparingly */
+
+  --font-*: initial;
+  --font-sans: var(--font-archivo), sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
