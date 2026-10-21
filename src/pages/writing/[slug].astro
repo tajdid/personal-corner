@@ -1,0 +1,17 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PlaceholderPage from '../../layouts/PlaceholderPage.astro';
+import { writing } from '../../data/home';
+import { routes } from '../../lib/routes';
+
+export const getStaticPaths = (() =>
+  writing.map(({ slug, title }) => ({ params: { slug }, props: { title } }))) satisfies GetStaticPaths;
+
+const { title } = Astro.props;
+---
+
+<PlaceholderPage
+  title={title}
+  message="This is a sample entry. The article is coming later."
+  back={{ label: 'All writing', href: routes.writing }}
+/>

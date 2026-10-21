@@ -1,0 +1,32 @@
+---
+/**
+ * Homepage section: narrow label column (number, title, note) beside a wider
+ * content column. Stacks on small screens.
+ */
+interface Props {
+  id: string;
+  number: string;
+  title: string;
+  note?: string;
+}
+
+const { id, number, title, note } = Astro.props;
+---
+
+<section aria-labelledby={id} class="mx-auto max-w-[68rem] px-5 sm:px-8">
+  <div
+    class="border-t border-rule pt-8 pb-16 sm:pt-11 sm:pb-24 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12"
+  >
+    <div class="mb-8 md:mb-0">
+      <h2 id={id} class="text-[0.9375rem] leading-snug">
+        <span class="text-muted">{number}</span><span class="mx-1.5 text-muted">/</span><span
+          >{title}</span
+        >
+      </h2>
+      {note && <p class="mt-3 text-xs text-muted">{note}</p>}
+    </div>
+    <div>
+      <slot />
+    </div>
+  </div>
+</section>

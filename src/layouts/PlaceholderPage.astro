@@ -1,0 +1,35 @@
+---
+/** Minimal stand-in for routes that are linked but not yet built. */
+import PageLayout from './PageLayout.astro';
+import { routes } from '../lib/routes';
+
+interface Props {
+  title: string;
+  message?: string;
+  back?: { label: string; href: string };
+}
+
+const {
+  title,
+  message = 'This page is still being built. Content is coming later.',
+  back = { label: 'Back home', href: routes.home },
+} = Astro.props;
+---
+
+<PageLayout title={`${title} — Tajdid Rahman`}>
+  <div class="mx-auto max-w-[68rem] px-5 pt-14 pb-24 sm:px-8 sm:pt-20 md:pt-24">
+    <div class="md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12">
+      <div class="md:col-start-2">
+        <p class="text-xs tracking-wide text-muted uppercase">Coming later</p>
+        <h1 class="mt-6 text-5xl font-semibold tracking-tight">{title}</h1>
+        <p class="mt-6 text-lg text-muted">{message}</p>
+        <p class="mt-8 text-sm">
+          <a href={back.href} class="text-accent hover:underline hover:underline-offset-4">
+            <span aria-hidden="true">←</span>
+            {back.label}
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</PageLayout>

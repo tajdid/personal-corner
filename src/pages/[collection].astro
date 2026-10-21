@@ -1,0 +1,16 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PlaceholderPage from '../layouts/PlaceholderPage.astro';
+import { collections } from '../data/home';
+
+// Generates only the listed collection slugs (/music, /books, …).
+export const getStaticPaths = (() =>
+  collections.map(({ slug, label }) => ({
+    params: { collection: slug },
+    props: { label },
+  }))) satisfies GetStaticPaths;
+
+const { label } = Astro.props;
+---
+
+<PlaceholderPage title={label} message="This collection is coming later." />

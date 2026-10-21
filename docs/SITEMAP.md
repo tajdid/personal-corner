@@ -48,3 +48,5 @@ Other destinations should be discoverable from the homepage's **Around here** ar
 ## Architecture notes
 
 Use short top-level collection URLs (`/music`, not `/collections/music`). `/collections` serves as an index. `/now` and `/uses` remain standalone pages even when linked from About. Treat this sitemap as a direction for future work, not an instruction to generate empty placeholder pages immediately.
+
+**Placeholder pages (decided in Milestone 03, Phase 2):** every destination linked from the homepage or header has a minimal placeholder page so navigation never breaks. This covers `/writing`, `/work`, `/about`, each homepage project (`/work/[slug]`) and writing entry (`/writing/[slug]`), and the six collections (`/music`, `/books`, `/films`, `/games`, `/travel`, `/bookmarks`). Placeholders use the shared layout and state that content is coming later. Routes not linked from the site (e.g. `/collections`, Phase 4 pages) are still not created until they are built.

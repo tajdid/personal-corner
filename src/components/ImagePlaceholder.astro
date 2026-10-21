@@ -1,0 +1,23 @@
+---
+/** Neutral stand-in for imagery that hasn't been supplied yet. */
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    'relative flex flex-col items-center justify-center gap-1 border border-rule px-6 text-center',
+    className,
+  ]}
+>
+  <span aria-hidden="true" class="absolute top-2 left-3 text-muted">+</span>
+  <span aria-hidden="true" class="absolute top-2 right-3 text-muted">+</span>
+  <span aria-hidden="true" class="absolute bottom-2 left-3 text-muted">+</span>
+  <span aria-hidden="true" class="absolute right-3 bottom-2 text-muted">+</span>
+  <span class="text-xs text-muted">{label}</span>
+  <span class="text-[0.625rem] tracking-wider text-muted uppercase">Image to come</span>
+</div>

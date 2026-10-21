@@ -1,0 +1,35 @@
+---
+import { routes } from '../lib/routes';
+
+const navItems = [
+  { label: 'Writing', href: routes.writing },
+  { label: 'Work', href: routes.work },
+  { label: 'About', href: routes.about },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<header class="mx-auto flex max-w-[68rem] items-baseline justify-between gap-6 px-5 py-8 sm:px-8 sm:py-12">
+  <a href={routes.home} class="text-[0.9375rem] hover:text-accent">Tajdid Rahman</a>
+  <nav aria-label="Main">
+    <ul class="flex gap-6 text-[0.9375rem] sm:gap-8">
+      {
+        navItems.map(({ label, href }) => {
+          const isCurrent = currentPath === href || currentPath.startsWith(`${href}/`);
+          return (
+            <li>
+              <a
+                href={href}
+                aria-current={isCurrent ? 'page' : undefined}
+                class="underline-offset-4 hover:text-accent aria-[current=page]:text-accent aria-[current=page]:underline"
+              >
+                {label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</header>

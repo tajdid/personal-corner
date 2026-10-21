@@ -1,0 +1,31 @@
+---
+import { footerLinks } from '../data/home';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mx-auto max-w-[68rem] px-5 sm:px-8">
+  <div
+    class="flex flex-col gap-6 border-t border-rule py-8 text-sm sm:flex-row sm:items-baseline sm:justify-between sm:pb-12"
+  >
+    <ul class="flex flex-wrap gap-x-8 gap-y-2">
+      {
+        footerLinks.map(({ label, href }) => (
+          <li>
+            {href ? (
+              <a href={href} class="text-accent hover:underline hover:underline-offset-4">
+                {label} <span aria-hidden="true">→</span>
+              </a>
+            ) : (
+              <span class="text-muted">
+                {label}
+                <span class="sr-only">(link coming soon)</span>
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <p class="text-xs text-muted">* Made slowly, with curiosity. © Taj {year}</p>
+  </div>
+</footer>
