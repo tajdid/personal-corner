@@ -1,5 +1,33 @@
 ---
-import PlaceholderPage from '../../layouts/PlaceholderPage.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
+import HomeSection from '../../components/HomeSection.astro';
+import CaseStudyCard from '../../components/CaseStudyCard.astro';
+import SideProjectRow from '../../components/SideProjectRow.astro';
+import { caseStudies, sideProjects } from '../../data/projects';
 ---
 
-<PlaceholderPage title="Work" />
+<PageLayout title="Work — Tajdid Rahman" description="Selected case studies and side projects by Taj.">
+  <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
+    <div class="pt-14 pb-12 sm:pt-20 sm:pb-16 md:pt-24">
+      <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl">Work</h1>
+      <p class="mt-8 text-xs text-muted">Placeholder introduction</p>
+      <p class="mt-2 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
+        A short introduction to the work will go here: the kinds of projects I take on and how I
+        approach them.
+      </p>
+    </div>
+
+    <section aria-labelledby="case-studies" class="pb-20 sm:pb-28">
+      <h2 id="case-studies" class="sr-only">Case studies</h2>
+      <div class="grid gap-x-8 gap-y-16 sm:grid-cols-2 sm:gap-y-20">
+        {caseStudies.map((project) => <CaseStudyCard {...project} />)}
+      </div>
+    </section>
+  </div>
+
+  <HomeSection id="side-projects" title="Side projects">
+    <ul class="border-t border-rule">
+      {sideProjects.map((project) => <SideProjectRow {...project} />)}
+    </ul>
+  </HomeSection>
+</PageLayout>

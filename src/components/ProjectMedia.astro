@@ -1,0 +1,36 @@
+---
+/** Renders a project image, or a labelled placeholder while imagery is missing. */
+import { Image } from 'astro:assets';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+import type { ProjectImage } from '../data/projects';
+
+interface Props {
+  image: ProjectImage;
+  /** Tailwind aspect class, e.g. `aspect-[3/2]`. */
+  aspect: string;
+  sizes: string;
+  /** Hide from assistive technology when nearby text already names the project. */
+  decorative?: boolean;
+  priority?: boolean;
+  class?: string;
+}
+
+const { image, aspect, sizes, decorative = false, priority = false, class: className } = Astro.props;
+---
+
+{
+  'src' in image ? (
+    <Image
+      src={image.src}
+      alt={decorative ? '' : image.alt}
+      widths={[480, 800, 1200, 1600]}
+      sizes={sizes}
+      priority={priority}
+      class:list={['w-full border border-rule object-cover', aspect, className]}
+    />
+  ) : (
+    <div aria-hidden={decorative ? 'true' : undefined}>
+      <ImagePlaceholder label={image.placeholder} class:list={[aspect, className]} />
+    </div>
+  )
+}

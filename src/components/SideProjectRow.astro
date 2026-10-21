@@ -1,0 +1,60 @@
+---
+/**
+ * Compact side-project row: thumbnail, title and description, optional year or
+ * status, and an arrow only when a real destination exists.
+ */
+import ProjectMedia from './ProjectMedia.astro';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+import type { SideProject } from '../data/projects';
+
+type Props = SideProject;
+
+const { title, description, year, status, thumbnail, href } = Astro.props;
+const external = href ? /^https?:\/\//.test(href) : false;
+const meta = [status, year].filter(Boolean).join(' · ');
+---
+
+<li class="group relative grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 border-b border-rule py-5 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:gap-x-6">
+  <div aria-hidden="true" class="self-start">
+    {
+      thumbnail ? (
+        <ProjectMedia image={thumbnail} aspect="aspect-[4/3]" sizes="6.5rem" decorative />
+      ) : (
+        <ImagePlaceholder bare class="aspect-[4/3]" />
+      )
+    }
+  </div>
+  <div class="self-center">
+    <h3 class="text-lg leading-snug">
+      {
+        href ? (
+          <a
+            href={href}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+            class="stretched-link text-accent underline-offset-4 group-hover:underline"
+          >
+            {title}
+            {external && <span class="sr-only">(opens in a new tab)</span>}
+          </a>
+        ) : (
+          title
+        )
+      }
+    </h3>
+    <p class="mt-1 text-[0.9375rem] text-muted">{description}</p>
+    {meta && <p class="mt-1 text-xs text-muted sm:hidden">{meta}</p>}
+  </div>
+  {
+    (meta || href) && (
+      <div class="hidden items-center gap-4 self-center text-muted sm:flex">
+        {meta && <span class="text-xs">{meta}</span>}
+        {href && (
+          <span aria-hidden="true" class="text-xl text-accent">
+            {external ? '↗' : '→'}
+          </span>
+        )}
+      </div>
+    )
+  }
+</li>

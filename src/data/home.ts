@@ -1,19 +1,12 @@
 /**
  * Homepage content. Everything here is placeholder until Taj supplies real
  * copy (see docs/CONTENT.md: never fabricate titles, dates or activities).
- * Projects and writing move to Content Collections once genuine entries exist.
+ * Projects live in ./projects.ts. Writing moves to a Content Collection once
+ * genuine entries exist.
  * Slugs drive both the homepage links and the placeholder routes (src/lib/routes.ts).
  */
 
 import type { ImageMetadata } from 'astro';
-
-export interface ProjectPreview {
-  slug: string;
-  title: string;
-  meta: string;
-  summary: string;
-  imageLabel: string;
-}
 
 export interface WritingPreview {
   slug: string;
@@ -57,30 +50,6 @@ export interface FooterLink {
   label: string;
   href?: string;
 }
-
-export const projects: ProjectPreview[] = [
-  {
-    slug: 'stakeone',
-    title: 'StakeOne',
-    meta: 'Category · Year (to confirm)',
-    summary: 'Short project description to come.',
-    imageLabel: 'StakeOne — selected screens',
-  },
-  {
-    slug: 'autoinvest',
-    title: 'AutoInvest',
-    meta: 'Category · Year (to confirm)',
-    summary: 'Short project description to come.',
-    imageLabel: 'AutoInvest — selected screens',
-  },
-  {
-    slug: 'ink-and-pixel',
-    title: 'Ink & Pixel',
-    meta: 'Category · Year (to confirm)',
-    summary: 'Short project description to come.',
-    imageLabel: 'Ink & Pixel — selected screens',
-  },
-];
 
 export const writing: WritingPreview[] = [
   {

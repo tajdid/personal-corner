@@ -1,11 +1,13 @@
 ---
 /** Neutral stand-in for imagery that hasn't been supplied yet. */
 interface Props {
-  label: string;
+  label?: string;
+  /** Frame and corner marks only, for thumbnails too small for text. */
+  bare?: boolean;
   class?: string;
 }
 
-const { label, class: className } = Astro.props;
+const { label, bare = false, class: className } = Astro.props;
 
 // Decorative crop marks in each corner; deliberately not "+" so they don't read as controls.
 const corners = [
@@ -30,6 +32,12 @@ const corners = [
       />
     ))
   }
-  <span class="text-xs text-muted">{label}</span>
-  <span class="text-[0.625rem] tracking-wider text-muted uppercase">Image to come</span>
+  {
+    !bare && (
+      <>
+        {label && <span class="text-xs text-muted">{label}</span>}
+        <span class="text-[0.625rem] tracking-wider text-muted uppercase">Image to come</span>
+      </>
+    )
+  }
 </div>

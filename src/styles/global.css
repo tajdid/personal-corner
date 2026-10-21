@@ -38,6 +38,28 @@
   }
 }
 
+/*
+ * Stretched link: the link's ::after covers its nearest positioned ancestor, so a
+ * whole row or card is clickable while the link text stays short and meaningful.
+ * The focus ring moves to the stretched area.
+ */
+@layer components {
+  .stretched-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .stretched-link:focus-visible {
+    outline: none;
+  }
+
+  .stretched-link:focus-visible::after {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

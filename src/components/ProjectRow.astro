@@ -1,33 +1,39 @@
 ---
-import ImagePlaceholder from './ImagePlaceholder.astro';
-import type { ProjectPreview } from '../data/home';
+import ProjectMedia from './ProjectMedia.astro';
+import type { Project } from '../data/projects';
 import { routes } from '../lib/routes';
 
-type Props = ProjectPreview;
+type Props = Pick<Project, 'slug' | 'title' | 'summary' | 'role' | 'year' | 'image'> & {
+  /** Heading level for the title; h3 under a section h2, h2 directly under the page h1. */
+  headingLevel?: 'h2' | 'h3';
+};
 
-const { slug, title, meta, summary, imageLabel } = Astro.props;
+const { slug, title, summary, role, year, image, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const meta = [role, year].filter(Boolean).join(' · ');
 ---
 
-<article>
-  <!-- The whole row is one link; the image placeholder is hidden from the accessible name. -->
-  <a
-    href={routes.project(slug)}
-    class="group grid gap-5 sm:grid-cols-[minmax(10rem,17.5rem)_minmax(0,1fr)] sm:gap-7"
-  >
-    <div aria-hidden="true">
-      <ImagePlaceholder
-        label={imageLabel}
-        class="aspect-[3/2] transition-colors group-hover:border-muted"
-      />
-    </div>
-    <div class="sm:pt-1">
-      <p class="text-xs text-muted">{meta}</p>
-      <h3
-        class="mt-3 text-2xl leading-tight text-accent underline-offset-4 group-hover:underline"
+<!-- The title is the only link; .stretched-link keeps the whole row clickable. -->
+<article
+  class="group relative grid gap-5 sm:grid-cols-[minmax(10rem,17.5rem)_minmax(0,1fr)] sm:gap-7"
+>
+  <ProjectMedia
+    image={image ?? { placeholder: `${title} — image to come` }}
+    aspect="aspect-[3/2]"
+    sizes="(min-width: 40rem) 17.5rem, 100vw"
+    decorative
+    class="transition-colors group-hover:border-muted"
+  />
+  <div class="sm:pt-1">
+    {meta && <p class="text-xs text-muted">{meta}</p>}
+    <Heading class:list={['text-2xl leading-tight text-accent', meta && 'mt-3']}>
+      <a
+        href={routes.project(slug)}
+        class="stretched-link underline-offset-4 group-hover:underline"
       >
         {title} <span aria-hidden="true">→</span>
-      </h3>
-      <p class="mt-3 max-w-[30rem] leading-relaxed">{summary}</p>
-    </div>
-  </a>
+      </a>
+    </Heading>
+    <p class="mt-3 max-w-[30rem] leading-relaxed">{summary}</p>
+  </div>
 </article>
