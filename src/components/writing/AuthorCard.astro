@@ -1,0 +1,44 @@
+---
+/** Author section beneath each article. Details come from src/data/author.ts. */
+import { Image } from 'astro:assets';
+import { author } from '../../data/author';
+
+const linkClass = 'text-accent hover:underline hover:underline-offset-4';
+---
+
+<section aria-labelledby="about-the-author" class="flex items-start gap-5">
+  {
+    author.portrait && (
+      <Image
+        src={author.portrait}
+        alt=""
+        widths={[112, 168]}
+        width={168}
+        sizes="3.5rem"
+        class="size-14 shrink-0 rounded-full object-cover"
+        style={`object-position: ${author.portraitPosition}`}
+      />
+    )
+  }
+  <div class="min-w-0">
+    <h2 id="about-the-author" class="text-lg">{author.name}</h2>
+    <p class="mt-2 max-w-[38rem] leading-relaxed text-muted">{author.bio}</p>
+    <ul class="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-[0.9375rem]">
+      <li>
+        <a href={author.aboutHref} class={linkClass}>
+          More about me <span aria-hidden="true">→</span>
+        </a>
+      </li>
+      {
+        author.rssHref && (
+          <li>
+            <a href={author.rssHref} target="_blank" rel="noopener noreferrer" class={linkClass}>
+              Subscribe via RSS <span aria-hidden="true">↗</span>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          </li>
+        )
+      }
+    </ul>
+  </div>
+</section>

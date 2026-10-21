@@ -1,21 +1,11 @@
 /**
  * Homepage content. Everything here is placeholder until Taj supplies real
  * copy (see docs/CONTENT.md: never fabricate titles, dates or activities).
- * Projects live in ./projects.ts. Writing moves to a Content Collection once
- * genuine entries exist.
- * Slugs drive both the homepage links and the placeholder routes (src/lib/routes.ts).
+ * Projects and articles live in their own folders under src/pages/work/ and
+ * src/pages/writing/, discovered by src/lib/projects.ts and src/lib/articles.ts.
  */
 
 import type { ImageMetadata } from 'astro';
-
-export interface WritingPreview {
-  slug: string;
-  title: string;
-  description: string;
-  category: string;
-  /** Omit for sample entries; they are labelled as such instead of dated. */
-  publishedAt?: Date;
-}
 
 export interface LifeLatelyEntry {
   category: string;
@@ -50,27 +40,6 @@ export interface FooterLink {
   label: string;
   href?: string;
 }
-
-export const writing: WritingPreview[] = [
-  {
-    slug: 'sample-note-one',
-    title: 'Sample note one',
-    description: 'A one-line summary of the note will sit here.',
-    category: 'Category',
-  },
-  {
-    slug: 'sample-note-two',
-    title: 'Sample note two',
-    description: 'A one-line summary of the note will sit here.',
-    category: 'Category',
-  },
-  {
-    slug: 'sample-note-three',
-    title: 'Sample note three',
-    description: 'A one-line summary of the note will sit here.',
-    category: 'Category',
-  },
-];
 
 // Provisional snapshot date until Taj confirms the first real entries.
 export const lifeLately: LifeLatelySnapshot = {

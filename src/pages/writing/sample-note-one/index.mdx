@@ -1,0 +1,43 @@
+---
+layout: '../../../layouts/ArticleLayout.astro'
+title: 'Sample note one'
+summary: 'A one-line summary of the note will sit here.'
+category: 'Category'
+order: 1
+homepageOrder: 1
+placeholder: true
+---
+
+import ArticleFigure from '../../../components/writing/ArticleFigure.astro';
+
+<p class="text-xs text-muted">Placeholder copy · typography sample</p>
+
+This sample shows how an article is styled. Everything on this page is placeholder text and will be replaced by the real note. Paragraphs sit in a comfortable reading column, with [inline links](/writing) in forest green.
+
+## A second-level heading
+
+Headings break the article into sections. Lists work as you'd expect:
+
+- An unordered list item.
+- Another item, with a little more text so it wraps onto a second line on narrower screens.
+- A third item.
+
+1. An ordered list item.
+2. A second step.
+3. A third step.
+
+### A third-level heading
+
+> A blockquote, used for quoting someone else. This sample doesn't quote anyone real.
+
+<ArticleFigure placeholder="Sample note one — image" caption="A caption sits beneath the image." />
+
+Inline code looks like `npm run build`, and longer snippets sit in a code block:
+
+```ts
+// A code block keeps long lines inside its own scroll area.
+const greeting = 'Hello from a sample article';
+console.log(greeting);
+```
+
+That's the full set of styles available to an article.

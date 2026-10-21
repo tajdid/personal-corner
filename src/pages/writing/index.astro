@@ -1,5 +1,27 @@
 ---
-import PlaceholderPage from '../../layouts/PlaceholderPage.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
+import WritingRow from '../../components/WritingRow.astro';
+import { articles } from '../../lib/articles';
 ---
 
-<PlaceholderPage title="Writing" />
+<PageLayout title="Writing — Tajdid Rahman" description="Notes and essays by Taj.">
+  <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
+    <div
+      class="pt-14 pb-12 sm:pt-20 sm:pb-16 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12 md:pt-24"
+    >
+      <div class="md:col-start-2">
+        <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl">Writing</h1>
+        <p class="mt-8 text-xs text-muted">Placeholder introduction</p>
+        <p class="mt-2 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
+          A short introduction to the writing will go here: what I write about and how often.
+        </p>
+      </div>
+    </div>
+
+    <section aria-label="Articles" class="pb-20 sm:pb-28 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12">
+      <div class="border-t border-rule pt-8 md:col-start-2">
+        {articles.map((article) => <WritingRow {...article} headingLevel="h2" />)}
+      </div>
+    </section>
+  </div>
+</PageLayout>

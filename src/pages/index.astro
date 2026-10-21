@@ -5,7 +5,8 @@ import ProjectRow from '../components/ProjectRow.astro';
 import WritingRow from '../components/WritingRow.astro';
 import CollectionLink from '../components/CollectionLink.astro';
 import LifeLatelyItem from '../components/LifeLatelyItem.astro';
-import { writing, lifeLately, collections } from '../data/home';
+import { lifeLately, collections } from '../data/home';
+import { homepageArticles } from '../lib/articles';
 import { homepageProjects } from '../lib/projects';
 import { routes } from '../lib/routes';
 
@@ -55,7 +56,7 @@ const textLink =
 
   <HomeSection id="notes-from-the-internet" number="02" title="Notes from the internet">
     <div>
-      {writing.map((entry) => <WritingRow {...entry} />)}
+      {homepageArticles.map((article) => <WritingRow {...article} />)}
     </div>
     <p class="mt-6 text-sm">
       <a href={routes.writing} class="text-accent hover:underline hover:underline-offset-4">
