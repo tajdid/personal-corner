@@ -39,6 +39,22 @@
 }
 
 /*
+ * Site navigation links (header and footer): ink by default; hover and the
+ * current page share the active style, forest green with an underline.
+ */
+@layer components {
+  .nav-link {
+    text-underline-offset: 4px;
+  }
+
+  .nav-link:hover,
+  .nav-link[aria-current='page'] {
+    color: var(--color-accent);
+    text-decoration-line: underline;
+  }
+}
+
+/*
  * Stretched link: the link's ::after covers its nearest positioned ancestor, so a
  * whole row or card is clickable while the link text stays short and meaningful.
  * The focus ring moves to the stretched area.

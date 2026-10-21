@@ -2,6 +2,8 @@
 import { footerLinks } from '../data/home';
 
 const year = new Date().getFullYear();
+// External web links open in a new tab; mailto and internal links don't.
+const isExternal = (href: string) => /^https?:\/\//.test(href);
 ---
 
 <footer class="mx-auto max-w-[68rem] px-5 sm:px-8">
@@ -13,8 +15,14 @@ const year = new Date().getFullYear();
         footerLinks.map(({ label, href }) => (
           <li>
             {href ? (
-              <a href={href} class="text-accent hover:underline hover:underline-offset-4">
-                {label} <span aria-hidden="true">→</span>
+              <a
+                href={href}
+                class="nav-link"
+                target={isExternal(href) ? '_blank' : undefined}
+                rel={isExternal(href) ? 'noopener noreferrer' : undefined}
+              >
+                {label}
+                {isExternal(href) && <span class="sr-only">(opens in a new tab)</span>}
               </a>
             ) : (
               <span class="text-muted">

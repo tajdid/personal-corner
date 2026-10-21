@@ -6,6 +6,7 @@
  */
 
 import type { ImageMetadata } from 'astro';
+import { profiles } from './profiles';
 
 export interface LifeLatelyEntry {
   category: string;
@@ -41,6 +42,8 @@ export interface FooterLink {
   href?: string;
 }
 
+const profileUrl = (name: string) => profiles.find((profile) => profile.name === name)?.url;
+
 // Provisional snapshot date until Taj confirms the first real entries.
 export const lifeLately: LifeLatelySnapshot = {
   asOf: '2026-10',
@@ -61,8 +64,8 @@ export const collections: CollectionPreview[] = [
 ];
 
 export const footerLinks: FooterLink[] = [
-  { label: 'Email' },
-  { label: 'Are.na' },
-  { label: 'Instagram' },
-  { label: 'RSS' },
+  { label: 'Email', href: 'mailto:tajdidrahman@gmail.com' },
+  { label: 'Resume', href: 'https://tajdid-resume.vercel.app' },
+  { label: 'LinkedIn', href: profileUrl('LinkedIn') },
+  { label: 'Instagram', href: profileUrl('Instagram') },
 ];
