@@ -1,6 +1,6 @@
 ---
 /**
- * Polaroid-style photograph. Reserved for the About page (docs/DESIGN.md).
+ * Polaroid-style photograph (currently used for the homepage portrait).
  * Square image window with a deeper lower border; the frame scales with the
  * element's width, so callers only set width, rotation and placement.
  */
@@ -49,9 +49,8 @@ const {
 
 <style>
   .polaroid {
-    /* Off-white photo paper, a shade lighter than the page. Local to this
-       component rather than a global palette token. */
-    background-color: #fbfaf6;
+    /* White photo paper. Local to this component rather than a palette token. */
+    background-color: #fff;
     padding: 5% 5% 0;
     box-shadow:
       0 1px 2px rgb(23 26 23 / 0.08),

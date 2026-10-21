@@ -93,18 +93,26 @@ function toProject(path: string, frontmatter: ProjectFrontmatter): Project {
   };
 }
 
-const allProjects = Object.entries(pages)
-  .map(([path, mod]) => toProject(path, mod.frontmatter))
-  .sort((a, b) => a.order - b.order);
+// Computed on first use, not at import: project pages import their layout, which
+// imports this module, so reading frontmatter during import would hit a cycle.
+let cache: Project[] | undefined;
 
-const listed = allProjects.filter((project) => project.listed !== false);
+function getProjects(): Project[] {
+  cache ??= Object.entries(pages)
+    .map(([path, mod]) => toProject(path, mod.frontmatter))
+    .sort((a, b) => a.order - b.order);
+  return cache;
+}
 
-export const caseStudies = listed.filter((project) => project.type === 'case-study');
-export const sideProjects = listed.filter((project) => project.type === 'side-project');
+const listed = () => getProjects().filter((project) => project.listed !== false);
 
-export const homepageProjects = allProjects
-  .filter((project) => project.homepageOrder !== undefined)
-  .sort((a, b) => (a.homepageOrder ?? 0) - (b.homepageOrder ?? 0));
+export const getCaseStudies = () => listed().filter((project) => project.type === 'case-study');
+export const getSideProjects = () => listed().filter((project) => project.type === 'side-project');
+
+export const getHomepageProjects = () =>
+  getProjects()
+    .filter((project) => project.homepageOrder !== undefined)
+    .sort((a, b) => (a.homepageOrder ?? 0) - (b.homepageOrder ?? 0));
 
 /** Disciplines and year as one muted metadata line. */
 export const metaLine = ({ disciplines, year }: Pick<ProjectFrontmatter, 'disciplines' | 'year'>) =>

@@ -77,16 +77,26 @@ function compare(a: Article, b: Article) {
   return a.order - b.order;
 }
 
-export const articles: Article[] = Object.entries(pages)
-  .map(([path, mod]) => toArticle(path, mod.frontmatter))
-  .sort(compare);
+// Computed on first use, not at import: article pages import ArticleLayout, which
+// imports this module, so reading frontmatter during import would hit a cycle.
+let cache: Article[] | undefined;
 
-export const homepageArticles = articles
-  .filter((article) => article.homepageOrder !== undefined)
-  .sort((a, b) => (a.homepageOrder ?? 0) - (b.homepageOrder ?? 0));
+/** All articles in index order. */
+export function getArticles(): Article[] {
+  cache ??= Object.entries(pages)
+    .map(([path, mod]) => toArticle(path, mod.frontmatter))
+    .sort(compare);
+  return cache;
+}
+
+export const getHomepageArticles = () =>
+  getArticles()
+    .filter((article) => article.homepageOrder !== undefined)
+    .sort((a, b) => (a.homepageOrder ?? 0) - (b.homepageOrder ?? 0));
 
 /** The immediately older article and up to three other recent ones, without repeats. */
 export function moreWriting(slug: string, recentLimit = 3) {
+  const articles = getArticles();
   const index = articles.findIndex((article) => article.slug === slug);
   const previous = index >= 0 ? articles[index + 1] : undefined;
   const recently = articles

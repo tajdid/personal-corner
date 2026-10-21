@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import WritingRow from '../../components/WritingRow.astro';
-import { articles } from '../../lib/articles';
+import { getArticles } from '../../lib/articles';
 ---
 
 <PageLayout title="Writing — Tajdid Rahman" description="Notes and essays by Taj.">
@@ -20,7 +20,7 @@ import { articles } from '../../lib/articles';
 
     <section aria-label="Articles" class="pb-20 sm:pb-28 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12">
       <div class="border-t border-rule pt-8 md:col-start-2">
-        {articles.map((article) => <WritingRow {...article} headingLevel="h2" />)}
+        {getArticles().map((article) => <WritingRow {...article} headingLevel="h2" />)}
       </div>
     </section>
   </div>

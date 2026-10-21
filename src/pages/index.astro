@@ -5,9 +5,11 @@ import ProjectRow from '../components/ProjectRow.astro';
 import WritingRow from '../components/WritingRow.astro';
 import CollectionLink from '../components/CollectionLink.astro';
 import LifeLatelyItem from '../components/LifeLatelyItem.astro';
+import Polaroid from '../components/Polaroid.astro';
+import portrait from '../assets/about/me.png';
 import { lifeLately, collections } from '../data/home';
-import { homepageArticles } from '../lib/articles';
-import { homepageProjects } from '../lib/projects';
+import { getHomepageArticles } from '../lib/articles';
+import { getHomepageProjects } from '../lib/projects';
 import { routes } from '../lib/routes';
 
 // Formats a YYYY-MM snapshot as e.g. "October 2026" (fixed, not clock-based).
@@ -23,40 +25,52 @@ const textLink =
 ---
 
 <PageLayout>
-  <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
-    <div
-      class="pt-14 pb-16 sm:pt-20 sm:pb-24 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12 md:pt-24"
-    >
-      <div class="md:col-start-2">
-        <p class="text-xs tracking-wide text-muted uppercase">
-          Northern Ireland <span aria-hidden="true">→</span><span class="sr-only">to</span> Dubai
-        </p>
-        <h1 class="mt-6 text-5xl font-semibold tracking-tight sm:text-6xl">Hey, I'm Taj.</h1>
-        <div class="mt-8 max-w-[47rem] space-y-6 text-lg leading-relaxed sm:text-xl">
-          <p>
-            I'm a product designer from Ireland, currently living in Dubai. I've been making
-            things for the internet since I was about 15.
+  <!-- Full-width wrapper clips any sideways overflow from the rotated photo and its shadow. -->
+  <div class="overflow-x-clip">
+    <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
+      <div class="intro pt-10 pb-10 sm:pt-16">
+        <div class="intro-text">
+          <p class="text-xs tracking-wide text-muted uppercase">
+            Northern Ireland <span aria-hidden="true">→</span><span class="sr-only">to</span> Dubai
           </p>
-          <p>
-            <!-- Keep the linked phrase on one line: Astro drops whitespace at line breaks next to tags. -->
-            This is my little corner of it.
-            A place for my <a href={routes.work} class={textLink}>work</a>, <a href={routes.writing} class={textLink}>writing</a>, things I'm building and whatever else I find interesting.
-          </p>
+          <h1 class="mt-6 text-5xl font-semibold tracking-tight sm:text-6xl min-[75rem]:text-[4.5rem]">
+            Hey, I'm Taj.
+          </h1>
+          <div class="mt-8 max-w-[47rem] space-y-6 text-lg leading-relaxed sm:text-xl">
+            <p>
+              I'm a product designer from Ireland, currently living in Dubai. I've been making
+              things for the internet since I was about 15.
+            </p>
+            <p>
+              <!-- Keep the linked phrase on one line: Astro drops whitespace at line breaks next to tags. -->
+              This is my little corner of it.
+              A place for my <a href={routes.work} class={textLink}>work</a>, <a href={routes.writing} class={textLink}>writing</a>, things I'm building and whatever else I find interesting.
+            </p>
+          </div>
+          <p class="mt-8 text-xs text-muted">A designer, a curious person, a work in progress.</p>
         </div>
-        <p class="mt-8 text-xs text-muted">A designer, a curious person, a work in progress.</p>
+
+        <div class="intro-photo">
+          <Polaroid
+            src={portrait}
+            alt="Taj browsing vinyl records in a record shop, with album covers on the wall behind him."
+            sizes="(min-width: 75rem) 25rem, (min-width: 48rem) 18rem, 15rem"
+            priority
+          />
+        </div>
       </div>
     </div>
   </div>
 
   <HomeSection id="things-ive-made" number="01" title="Things I've made" note="A few things out in the world.">
     <div class="space-y-12 sm:space-y-10">
-      {homepageProjects.map((project) => <ProjectRow {...project} />)}
+      {getHomepageProjects().map((project) => <ProjectRow {...project} />)}
     </div>
   </HomeSection>
 
   <HomeSection id="notes-from-the-internet" number="02" title="Notes from the internet">
     <div>
-      {homepageArticles.map((article) => <WritingRow {...article} />)}
+      {getHomepageArticles().map((article) => <WritingRow {...article} />)}
     </div>
     <p class="mt-6 text-sm">
       <a href={routes.writing} class="text-accent hover:underline hover:underline-offset-4">
@@ -79,3 +93,61 @@ const textLink =
     </div>
   </HomeSection>
 </PageLayout>
+
+<style>
+  /*
+   * Opening: photo stacked above the text on small screens; from 75rem the photo
+   * sits in the label column and extends left into the available gutter, while
+   * the text stays on the main content column.
+   */
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro-photo {
+    order: -1;
+    width: min(15rem, 66vw);
+    margin: 0 0 2.75rem 0.25rem;
+    rotate: -2deg;
+  }
+
+  @media (min-width: 48rem) {
+    .intro {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      column-gap: 3rem;
+    }
+
+    .intro-text,
+    .intro-photo {
+      grid-column: 2;
+    }
+
+    .intro-photo {
+      grid-row: 1;
+      width: 18rem;
+    }
+
+    .intro-text {
+      grid-row: 2;
+    }
+  }
+
+  @media (min-width: 75rem) {
+    .intro-text {
+      grid-row: 1;
+    }
+
+    .intro-photo {
+      /* Up to 25rem, limited by the label column plus the free gutter beside the
+         container, so it never reaches the viewport edge or the text. */
+      --photo-width: min(25rem, calc(11rem + max(0px, (100vw - 68rem) / 2) - 0.5rem));
+      grid-column: 1;
+      align-self: start;
+      width: var(--photo-width);
+      margin: -0.75rem 0 0 calc(11rem - var(--photo-width));
+      rotate: -4deg;
+    }
+  }
+</style>
+
