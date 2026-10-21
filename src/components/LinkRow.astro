@@ -1,0 +1,66 @@
+---
+/**
+ * Horizontal list row: title, muted description, arrow, thin divider (see About →
+ * Around here / Elsewhere). Renders a link when `href` is set; otherwise
+ * non-interactive text with `pendingLabel` and no arrow.
+ */
+interface Props {
+  label: string;
+  description: string;
+  href?: string;
+  /** Arrow glyph for a working link; use ↗ for external destinations. */
+  arrow?: string;
+  /** External links open in a new tab. */
+  external?: boolean;
+  rel?: string;
+  pendingLabel?: string;
+}
+
+const {
+  label,
+  description,
+  href,
+  arrow = '→',
+  external = false,
+  rel,
+  pendingLabel = 'Coming later',
+} = Astro.props;
+
+// noopener/noreferrer keep the new tab from reaching back into this page.
+const linkRel = external ? [rel, 'noopener', 'noreferrer'].filter(Boolean).join(' ') : rel;
+
+const grid = 'sm:grid-cols-[9rem_minmax(0,1fr)_auto]';
+---
+
+<li class="border-b border-rule">
+  {
+    href ? (
+      <a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={linkRel}
+        class:list={[
+          'group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-5',
+          grid,
+        ]}
+      >
+        <span class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]">
+          {label}
+          {external && <span class="sr-only">(opens in a new tab)</span>}
+        </span>
+        <span class="col-start-1 text-[0.9375rem] text-muted sm:col-start-2 sm:row-start-1">
+          {description}
+        </span>
+        <span aria-hidden="true" class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3">
+          {arrow}
+        </span>
+      </a>
+    ) : (
+      <div class:list={['grid gap-x-6 gap-y-1 py-5 sm:items-baseline', grid]}>
+        <span class="text-xl sm:text-[1.375rem]">{label}</span>
+        <span class="text-[0.9375rem] text-muted">{description}</span>
+        <span class="text-xs text-muted">{pendingLabel}</span>
+      </div>
+    )
+  }
+</li>

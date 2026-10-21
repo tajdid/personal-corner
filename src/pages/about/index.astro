@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import PageLayout from '../../layouts/PageLayout.astro';
 import HomeSection from '../../components/HomeSection.astro';
+import LinkRow from '../../components/LinkRow.astro';
 import stampsArtwork from '../../assets/about/stamps.png';
 import { collections } from '../../data/home';
 import { profiles } from '../../data/profiles';
@@ -97,61 +98,23 @@ const textLink =
   <HomeSection id="around-here" title="Around here">
     <p class="text-xl sm:text-[1.375rem]">A few things, gathered in one place.</p>
     <ul class="mt-8 border-t border-rule">
-      {
-        aroundHere.map(({ label, description, href }) => (
-          <li class="border-b border-rule">
-            {href ? (
-              <a
-                href={href}
-                class="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-5 sm:grid-cols-[9rem_minmax(0,1fr)_auto]"
-              >
-                <span class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]">
-                  {label}
-                </span>
-                <span class="col-start-1 text-[0.9375rem] text-muted sm:col-start-2 sm:row-start-1">
-                  {description}
-                </span>
-                <span
-                  aria-hidden="true"
-                  class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3"
-                >
-                  →
-                </span>
-              </a>
-            ) : (
-              <div class="grid gap-x-6 gap-y-1 py-5 sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-baseline">
-                <span class="text-xl sm:text-[1.375rem]">{label}</span>
-                <span class="text-[0.9375rem] text-muted">{description}</span>
-                <span class="text-xs text-muted">Coming later</span>
-              </div>
-            )}
-          </li>
-        ))
-      }
+      {aroundHere.map((item) => <LinkRow {...item} />)}
     </ul>
   </HomeSection>
 
   <HomeSection id="elsewhere" title="Elsewhere">
-    <ul class="grid gap-x-10 sm:grid-cols-2">
+    <ul class="border-t border-rule">
       {
-        profiles.map(({ name, url }) => (
-          <li class="border-b border-rule">
-            {url ? (
-              <a
-                href={url}
-                rel="me"
-                class="flex items-baseline justify-between gap-4 py-3.5 text-accent hover:underline hover:underline-offset-4"
-              >
-                {name}
-                <span aria-hidden="true" class="text-sm">↗</span>
-              </a>
-            ) : (
-              <p class="flex items-baseline justify-between gap-4 py-3.5">
-                {name}
-                <span class="text-xs text-muted">Link to add</span>
-              </p>
-            )}
-          </li>
+        profiles.map(({ name, description, url }) => (
+          <LinkRow
+            label={name}
+            description={description}
+            href={url}
+            arrow="↗"
+            external
+            rel="me"
+            pendingLabel="Link to add"
+          />
         ))
       }
     </ul>
