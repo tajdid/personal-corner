@@ -6,6 +6,14 @@ interface Props {
 }
 
 const { label, class: className } = Astro.props;
+
+// Decorative crop marks in each corner; deliberately not "+" so they don't read as controls.
+const corners = [
+  'top-2 left-2 border-t border-l',
+  'top-2 right-2 border-t border-r',
+  'bottom-2 left-2 border-b border-l',
+  'right-2 bottom-2 border-r border-b',
+];
 ---
 
 <div
@@ -14,10 +22,14 @@ const { label, class: className } = Astro.props;
     className,
   ]}
 >
-  <span aria-hidden="true" class="absolute top-2 left-3 text-muted">+</span>
-  <span aria-hidden="true" class="absolute top-2 right-3 text-muted">+</span>
-  <span aria-hidden="true" class="absolute bottom-2 left-3 text-muted">+</span>
-  <span aria-hidden="true" class="absolute right-3 bottom-2 text-muted">+</span>
+  {
+    corners.map((position) => (
+      <span
+        aria-hidden="true"
+        class:list={['pointer-events-none absolute size-2 border-muted/50', position]}
+      />
+    ))
+  }
   <span class="text-xs text-muted">{label}</span>
   <span class="text-[0.625rem] tracking-wider text-muted uppercase">Image to come</span>
 </div>

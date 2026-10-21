@@ -5,6 +5,8 @@
  * Slugs drive both the homepage links and the placeholder routes (src/lib/routes.ts).
  */
 
+import type { ImageMetadata } from 'astro';
+
 export interface ProjectPreview {
   slug: string;
   title: string;
@@ -22,10 +24,26 @@ export interface WritingPreview {
   publishedAt?: Date;
 }
 
-export interface LifeLatelyItem {
-  label: string;
+export interface LifeLatelyEntry {
+  category: string;
   title: string;
-  note: string;
+  /** Alt text is required whenever an image is supplied. */
+  image?: {
+    src: ImageMetadata;
+    alt: string;
+    /** `contain` keeps whole book covers and artwork visible; defaults to `cover`. */
+    fit?: 'cover' | 'contain';
+  };
+  /** Only for a real destination; omit otherwise. */
+  link?: { label: string; href: string };
+  /** Shown in the media area while no image exists. */
+  placeholderLabel?: string;
+}
+
+export interface LifeLatelySnapshot {
+  /** Month the snapshot describes, as YYYY-MM. Updated by hand, never from the clock. */
+  asOf: string;
+  entries: LifeLatelyEntry[];
 }
 
 export interface CollectionPreview {
@@ -85,11 +103,15 @@ export const writing: WritingPreview[] = [
   },
 ];
 
-export const lifeLately: LifeLatelyItem[] = [
-  { label: 'Listening', title: 'To be added', note: 'Something genuinely on repeat.' },
-  { label: 'Building', title: 'To be added', note: 'A side project in progress.' },
-  { label: 'Reading', title: 'To be added', note: 'A book currently on the go.' },
-];
+// Provisional snapshot date until Taj confirms the first real entries.
+export const lifeLately: LifeLatelySnapshot = {
+  asOf: '2026-10',
+  entries: [
+    { category: 'Listening', title: 'Album to be added', placeholderLabel: 'Album artwork' },
+    { category: 'Building', title: 'Current build to be added', placeholderLabel: 'Project image' },
+    { category: 'Reading', title: 'Book to be added', placeholderLabel: 'Book cover' },
+  ],
+};
 
 export const collections: CollectionPreview[] = [
   { slug: 'music', label: 'Music', description: 'Albums on repeat & occasional playlists' },

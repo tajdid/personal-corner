@@ -1,5 +1,173 @@
 ---
-import PlaceholderPage from '../../layouts/PlaceholderPage.astro';
+import { Image } from 'astro:assets';
+import PageLayout from '../../layouts/PageLayout.astro';
+import HomeSection from '../../components/HomeSection.astro';
+import stampsArtwork from '../../assets/about/stamps.png';
+import { collections } from '../../data/home';
+import { profiles } from '../../data/profiles';
+import { routes } from '../../lib/routes';
+
+// Biography copy is placeholder until Taj supplies it (docs/CONTENT.md).
+const placeholderTag = 'text-xs text-muted';
+
+const bioParagraphs = [
+  {
+    theme: 'Finding design',
+    text: 'A paragraph on my background, how I came to design and what my work involves today.',
+  },
+  {
+    theme: 'Beyond work',
+    text: 'A paragraph on the things I spend time on outside of work, and why they matter to me.',
+  },
+  {
+    theme: 'The thread between',
+    text: 'A paragraph on the thread that ties the work and the interests together.',
+  },
+];
+
+// About-specific descriptions; routes come from the shared collection data, so a
+// destination that doesn't exist renders as pending text rather than a link.
+const aroundHere = [
+  { slug: 'music', label: 'Music', description: 'Records, playlists and listening notes.' },
+  { slug: 'books', label: 'Books', description: 'Reading notes and pages to return to.' },
+  { slug: 'films', label: 'Films', description: 'A place for cinema and reflections.' },
+  { slug: 'games', label: 'Games', description: 'Play, worlds and the ideas within them.' },
+  { slug: 'travel', label: 'Travel', description: 'Places, observations and field notes.' },
+  { slug: 'bookmarks', label: 'Bookmarks', description: 'Interesting corners of the internet.' },
+].map((item) => ({
+  ...item,
+  href: collections.some(({ slug }) => slug === item.slug)
+    ? routes.collection(item.slug)
+    : undefined,
+}));
+
+const bioId = 'a-little-more-about-me';
+const textLink =
+  'text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent';
 ---
 
-<PlaceholderPage title="About" />
+<PageLayout title="About — Tajdid Rahman" description="A little about Taj.">
+  <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
+    <div class="opening pt-10 pb-14 sm:pt-16 sm:pb-20">
+      <h1 class="font-bold tracking-[-0.045em]">Hey, I’m Taj.</h1>
+
+      <div
+        class="mt-10 grid gap-10 sm:mt-14 md:grid-cols-[minmax(0,3fr)_minmax(0,5fr)] md:gap-12"
+      >
+        <Image
+          src={stampsArtwork}
+          alt=""
+          widths={[320, 480, 640]}
+          width={640}
+          sizes="(min-width: 48rem) 20rem, 16rem"
+          loading="eager"
+          class="h-auto w-full max-w-[16rem] md:max-w-[20rem]"
+        />
+
+        <div class="max-w-[38rem] text-lg leading-relaxed">
+          <p>
+            I’m a product designer from <span class="text-accent">Ireland</span>, currently living in <span class="text-accent">Dubai</span>. I’ve been making things for the internet since I was about 15.
+          </p>
+          <p class="mt-6">
+            This is my little corner of it. A place for my <a href={routes.work} class={textLink}>work</a>, <a href={routes.writing} class={textLink}>writing</a>, things I’m building and whatever else I find interesting.
+          </p>
+          <p class="mt-10 text-sm">
+            <a href={`#${bioId}`} class="text-accent hover:underline hover:underline-offset-4">
+              Learn more about me below <span aria-hidden="true">↓</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <HomeSection id={bioId} title="A little more about me">
+    <div class="max-w-[38rem] space-y-8">
+      {
+        bioParagraphs.map(({ theme, text }) => (
+          <div>
+            <p class={placeholderTag}>Placeholder copy · {theme}</p>
+            <p class="mt-2 text-lg leading-relaxed">{text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </HomeSection>
+
+  <HomeSection id="around-here" title="Around here">
+    <p class="text-xl sm:text-[1.375rem]">A few things, gathered in one place.</p>
+    <ul class="mt-8 border-t border-rule">
+      {
+        aroundHere.map(({ label, description, href }) => (
+          <li class="border-b border-rule">
+            {href ? (
+              <a
+                href={href}
+                class="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-5 sm:grid-cols-[9rem_minmax(0,1fr)_auto]"
+              >
+                <span class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]">
+                  {label}
+                </span>
+                <span class="col-start-1 text-[0.9375rem] text-muted sm:col-start-2 sm:row-start-1">
+                  {description}
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3"
+                >
+                  →
+                </span>
+              </a>
+            ) : (
+              <div class="grid gap-x-6 gap-y-1 py-5 sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-baseline">
+                <span class="text-xl sm:text-[1.375rem]">{label}</span>
+                <span class="text-[0.9375rem] text-muted">{description}</span>
+                <span class="text-xs text-muted">Coming later</span>
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
+  <HomeSection id="elsewhere" title="Elsewhere">
+    <ul class="grid gap-x-10 sm:grid-cols-2">
+      {
+        profiles.map(({ name, url }) => (
+          <li class="border-b border-rule">
+            {url ? (
+              <a
+                href={url}
+                rel="me"
+                class="flex items-baseline justify-between gap-4 py-3.5 text-accent hover:underline hover:underline-offset-4"
+              >
+                {name}
+                <span aria-hidden="true" class="text-sm">↗</span>
+              </a>
+            ) : (
+              <p class="flex items-baseline justify-between gap-4 py-3.5">
+                {name}
+                <span class="text-xs text-muted">Link to add</span>
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+</PageLayout>
+
+<style>
+  /* The heading spans the content width at every size: font-size is tied to the
+     container's inline size rather than to breakpoints. */
+  .opening {
+    container-type: inline-size;
+  }
+
+  h1 {
+    /* The line measures ≈5.05em, so 19cqi fills ~96% of the width on one line. */
+    font-size: 19cqi;
+    line-height: 0.95;
+  }
+</style>

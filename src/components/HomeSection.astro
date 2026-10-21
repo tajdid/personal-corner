@@ -1,11 +1,12 @@
 ---
 /**
- * Homepage section: narrow label column (number, title, note) beside a wider
- * content column. Stacks on small screens.
+ * Editorial section: narrow label column (number, title, note) beside a wider
+ * content column. Stacks on small screens. Used on Home and About.
+ * Pass `note` as text, or a `slot="note"` element (e.g. a <time>) for markup.
  */
 interface Props {
   id: string;
-  number: string;
+  number?: string;
   title: string;
   note?: string;
 }
@@ -19,11 +20,23 @@ const { id, number, title, note } = Astro.props;
   >
     <div class="mb-8 md:mb-0">
       <h2 id={id} class="text-[0.9375rem] leading-snug">
-        <span class="text-muted">{number}</span><span class="mx-1.5 text-muted">/</span><span
-          >{title}</span
-        >
+        {
+          number && (
+            <>
+              <span class="text-muted">{number}</span>
+              <span class="mx-1.5 text-muted">/</span>
+            </>
+          )
+        }<span>{title}</span>
       </h2>
-      {note && <p class="mt-3 text-xs text-muted">{note}</p>}
+      {
+        (note || Astro.slots.has('note')) && (
+          <p class="mt-3 text-xs text-muted">
+            {note}
+            <slot name="note" />
+          </p>
+        )
+      }
     </div>
     <div>
       <slot />
