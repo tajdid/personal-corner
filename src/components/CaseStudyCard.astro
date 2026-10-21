@@ -1,18 +1,17 @@
 ---
 /** Featured case study on the Work page: large cover, category line, title, description. */
 import ProjectMedia from './ProjectMedia.astro';
-import type { Project } from '../data/projects';
-import { routes } from '../lib/routes';
+import { metaLine, type Project } from '../lib/projects';
 
-type Props = Pick<Project, 'slug' | 'title' | 'headline' | 'summary' | 'role' | 'year' | 'image'>;
+type Props = Pick<Project, 'href' | 'title' | 'summary' | 'disciplines' | 'year' | 'image'>;
 
-const { slug, title, headline, summary, role, year, image } = Astro.props;
-const meta = [role, year].filter(Boolean).join(' · ');
+const { href, title, summary, disciplines, year, image } = Astro.props;
+const meta = metaLine({ disciplines, year });
 ---
 
 <article class="group relative">
   <ProjectMedia
-    image={image ?? { placeholder: `${title} — cover image` }}
+    image={image}
     aspect="aspect-[3/2]"
     sizes="(min-width: 68rem) 31rem, (min-width: 40rem) 45vw, 100vw"
     decorative
@@ -21,10 +20,10 @@ const meta = [role, year].filter(Boolean).join(' · ');
   {meta && <p class="mt-5 text-xs text-muted">{meta}</p>}
   <h3 class:list={['text-2xl leading-tight', meta ? 'mt-2' : 'mt-5']}>
     <a
-      href={routes.project(slug)}
+      href={href}
       class="stretched-link text-accent underline-offset-4 group-hover:underline"
     >
-      {headline ?? title}
+      {title}
     </a>
   </h3>
   <p class="mt-3 max-w-[30rem] leading-relaxed">{summary}</p>

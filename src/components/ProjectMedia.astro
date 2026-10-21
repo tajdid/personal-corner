@@ -2,7 +2,7 @@
 /** Renders a project image, or a labelled placeholder while imagery is missing. */
 import { Image } from 'astro:assets';
 import ImagePlaceholder from './ImagePlaceholder.astro';
-import type { ProjectImage } from '../data/projects';
+import type { ProjectImage } from '../lib/projects';
 
 interface Props {
   image: ProjectImage;
@@ -16,6 +16,7 @@ interface Props {
 }
 
 const { image, aspect, sizes, decorative = false, priority = false, class: className } = Astro.props;
+const widths = [480, 800, 1200, 1600];
 ---
 
 {
@@ -23,7 +24,8 @@ const { image, aspect, sizes, decorative = false, priority = false, class: class
     <Image
       src={image.src}
       alt={decorative ? '' : image.alt}
-      widths={[480, 800, 1200, 1600]}
+      widths={widths}
+      width={Math.min(Math.max(...widths), image.src.width)}
       sizes={sizes}
       priority={priority}
       class:list={['w-full border border-rule object-cover', aspect, className]}

@@ -1,0 +1,52 @@
+---
+/**
+ * Layout for case-study MDX pages (frontmatter `layout`). The MDX body supplies
+ * the story: <Section>, <Figure> and <ImagePair> from src/components/project/.
+ */
+import PageLayout from './PageLayout.astro';
+import ProjectHeader from '../components/project/ProjectHeader.astro';
+import ProjectMedia from '../components/ProjectMedia.astro';
+import { resolveProjectImage, slugFromFile, type ProjectFrontmatter } from '../lib/projects';
+import { routes } from '../lib/routes';
+
+interface Props {
+  frontmatter: ProjectFrontmatter;
+  file: string;
+}
+
+const { frontmatter, file } = Astro.props;
+const slug = slugFromFile(file);
+const cover = frontmatter.cover ? resolveProjectImage(slug, frontmatter.cover) : undefined;
+const label = frontmatter.name ?? frontmatter.title;
+
+const container = 'mx-auto max-w-[68rem] px-5 sm:px-8';
+const grid = 'md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12';
+---
+
+<PageLayout title={`${frontmatter.title} — Tajdid Rahman`} description={frontmatter.summary}>
+  <div class={container}>
+    <div class:list={['pt-10 pb-12 sm:pt-14 sm:pb-16', grid]}>
+      <ProjectHeader frontmatter={frontmatter} />
+    </div>
+    <div class="pb-16 sm:pb-24">
+      <ProjectMedia
+        image={cover ? { src: cover, alt: frontmatter.coverAlt ?? '' } : { placeholder: `${label} — lead image` }}
+        aspect="aspect-[16/9]"
+        sizes="(min-width: 68rem) 64rem, 100vw"
+        priority
+      />
+    </div>
+  </div>
+
+  <slot />
+
+  <div class={container}>
+    <div class:list={['border-t border-rule py-10 sm:py-12', grid]}>
+      <p class="md:col-start-2">
+        <a href={routes.work} class="text-sm text-accent hover:underline hover:underline-offset-4">
+          <span aria-hidden="true">←</span> All work
+        </a>
+      </p>
+    </div>
+  </div>
+</PageLayout>

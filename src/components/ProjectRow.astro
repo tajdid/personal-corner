@@ -1,16 +1,17 @@
 ---
 import ProjectMedia from './ProjectMedia.astro';
-import type { Project } from '../data/projects';
-import { routes } from '../lib/routes';
+import { metaLine, type Project } from '../lib/projects';
 
-type Props = Pick<Project, 'slug' | 'title' | 'summary' | 'role' | 'year' | 'image'> & {
+type Props = Pick<Project, 'href' | 'title' | 'name' | 'summary' | 'disciplines' | 'year' | 'image'> & {
   /** Heading level for the title; h3 under a section h2, h2 directly under the page h1. */
   headingLevel?: 'h2' | 'h3';
 };
 
-const { slug, title, summary, role, year, image, headingLevel = 'h3' } = Astro.props;
+const { href, title, name, summary, disciplines, year, image, headingLevel = 'h3' } = Astro.props;
 const Heading = headingLevel;
-const meta = [role, year].filter(Boolean).join(' · ');
+const meta = metaLine({ disciplines, year });
+// Homepage rows use the short project name when one is set.
+const label = name ?? title;
 ---
 
 <!-- The title is the only link; .stretched-link keeps the whole row clickable. -->
@@ -18,7 +19,7 @@ const meta = [role, year].filter(Boolean).join(' · ');
   class="group relative grid gap-5 sm:grid-cols-[minmax(10rem,17.5rem)_minmax(0,1fr)] sm:gap-7"
 >
   <ProjectMedia
-    image={image ?? { placeholder: `${title} — image to come` }}
+    image={image}
     aspect="aspect-[3/2]"
     sizes="(min-width: 40rem) 17.5rem, 100vw"
     decorative
@@ -28,10 +29,10 @@ const meta = [role, year].filter(Boolean).join(' · ');
     {meta && <p class="text-xs text-muted">{meta}</p>}
     <Heading class:list={['text-2xl leading-tight text-accent', meta && 'mt-3']}>
       <a
-        href={routes.project(slug)}
+        href={href}
         class="stretched-link underline-offset-4 group-hover:underline"
       >
-        {title} <span aria-hidden="true">→</span>
+        {label} <span aria-hidden="true">→</span>
       </a>
     </Heading>
     <p class="mt-3 max-w-[30rem] leading-relaxed">{summary}</p>

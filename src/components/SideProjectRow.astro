@@ -1,24 +1,23 @@
 ---
 /**
- * Compact side-project row: thumbnail, title and description, optional year or
- * status, and an arrow only when a real destination exists.
+ * Compact side-project row: thumbnail, title and summary linking to the
+ * project's own page, and an optional year.
  */
 import ProjectMedia from './ProjectMedia.astro';
 import ImagePlaceholder from './ImagePlaceholder.astro';
-import type { SideProject } from '../data/projects';
+import type { Project } from '../lib/projects';
 
-type Props = SideProject;
+type Props = Pick<Project, 'href' | 'title' | 'summary' | 'year' | 'image'>;
 
-const { title, description, year, status, thumbnail, href } = Astro.props;
-const external = href ? /^https?:\/\//.test(href) : false;
-const meta = [status, year].filter(Boolean).join(' · ');
+const { href, title, summary, year, image } = Astro.props;
+const meta = year ? String(year) : '';
 ---
 
 <li class="group relative grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 border-b border-rule py-5 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:gap-x-6">
   <div aria-hidden="true" class="self-start">
     {
-      thumbnail ? (
-        <ProjectMedia image={thumbnail} aspect="aspect-[4/3]" sizes="6.5rem" decorative />
+      'src' in image ? (
+        <ProjectMedia image={image} aspect="aspect-[4/3]" sizes="6.5rem" decorative />
       ) : (
         <ImagePlaceholder bare class="aspect-[4/3]" />
       )
@@ -26,35 +25,15 @@ const meta = [status, year].filter(Boolean).join(' · ');
   </div>
   <div class="self-center">
     <h3 class="text-lg leading-snug">
-      {
-        href ? (
-          <a
-            href={href}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noopener noreferrer' : undefined}
-            class="stretched-link text-accent underline-offset-4 group-hover:underline"
-          >
-            {title}
-            {external && <span class="sr-only">(opens in a new tab)</span>}
-          </a>
-        ) : (
-          title
-        )
-      }
+      <a href={href} class="stretched-link text-accent underline-offset-4 group-hover:underline">
+        {title}
+      </a>
     </h3>
-    <p class="mt-1 text-[0.9375rem] text-muted">{description}</p>
+    <p class="mt-1 text-[0.9375rem] text-muted">{summary}</p>
     {meta && <p class="mt-1 text-xs text-muted sm:hidden">{meta}</p>}
   </div>
-  {
-    (meta || href) && (
-      <div class="hidden items-center gap-4 self-center text-muted sm:flex">
-        {meta && <span class="text-xs">{meta}</span>}
-        {href && (
-          <span aria-hidden="true" class="text-xl text-accent">
-            {external ? '↗' : '→'}
-          </span>
-        )}
-      </div>
-    )
-  }
+  <div class="hidden items-center gap-4 self-center text-muted sm:flex">
+    {meta && <span class="text-xs">{meta}</span>}
+    <span aria-hidden="true" class="text-xl text-accent">→</span>
+  </div>
 </li>

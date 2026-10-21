@@ -1,0 +1,80 @@
+---
+/**
+ * Top of a project page: back link, optional short name, title, summary,
+ * compact metadata and external links. Only fields that are set render.
+ */
+import type { ProjectFrontmatter } from '../../lib/projects';
+import { routes } from '../../lib/routes';
+
+interface Props {
+  frontmatter: ProjectFrontmatter;
+  /** Case studies show the full metadata row; side projects keep it lighter. */
+  detailedMeta?: boolean;
+}
+
+const { frontmatter, detailedMeta = true } = Astro.props;
+const { title, name, summary, disciplines, year, scope, collaborators, liveUrl, sourceUrl } = frontmatter;
+
+const meta = [
+  { label: 'Disciplines', value: disciplines?.join(', ') },
+  { label: 'Year', value: year?.toString() },
+  ...(detailedMeta
+    ? [
+        { label: 'Scope', value: scope },
+        { label: 'Collaborators', value: collaborators?.join(', ') },
+      ]
+    : []),
+].filter((item): item is { label: string; value: string } => Boolean(item.value));
+
+const links = [
+  { label: 'Visit the project', href: liveUrl },
+  { label: 'View the source code', href: sourceUrl },
+].filter((link): link is { label: string; href: string } => Boolean(link.href));
+
+const linkClass = 'text-accent hover:underline hover:underline-offset-4';
+---
+
+<div class="md:col-start-2">
+  <a href={routes.work} class:list={['text-sm', linkClass]}>
+    <span aria-hidden="true">←</span> Back to Work
+  </a>
+  {name && name !== title && <p class="mt-10 text-sm text-muted">{name}</p>}
+  <h1
+    class:list={[
+      'font-semibold tracking-tight',
+      name && name !== title ? 'mt-3' : 'mt-10',
+      title.length > 30 ? 'text-4xl leading-tight sm:text-5xl' : 'text-5xl sm:text-6xl',
+    ]}
+  >
+    {title}
+  </h1>
+  <p class="mt-6 max-w-[38rem] text-lg leading-relaxed sm:text-xl">{summary}</p>
+
+  {
+    meta.length > 0 && (
+      <dl class="mt-10 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule pt-5 sm:grid-cols-4">
+        {meta.map(({ label, value }) => (
+          <div>
+            <dt class="text-xs text-muted">{label}</dt>
+            <dd class="mt-1 text-[0.9375rem]">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+
+  {
+    links.length > 0 && (
+      <ul class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-[0.9375rem]">
+        {links.map(({ label, href }) => (
+          <li>
+            <a href={href} target="_blank" rel="noopener noreferrer" class={linkClass}>
+              {label} <span aria-hidden="true">↗</span>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>
