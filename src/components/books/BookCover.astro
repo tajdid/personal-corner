@@ -1,0 +1,39 @@
+---
+/**
+ * Portrait cover in a fixed 2:3 box. The cover is scaled to fit (never cropped
+ * or stretched) and sits on the box's bottom-left, so every cover shares a
+ * baseline and titles align beneath. Missing covers use the shared placeholder.
+ */
+import { Image } from 'astro:assets';
+import ImagePlaceholder from '../ImagePlaceholder.astro';
+import type { BookCover as Cover } from '../../data/books';
+
+interface Props {
+  cover?: Cover;
+  label: string;
+  sizes: string;
+  /** Decorative by default because the title always sits beneath. */
+  decorative?: boolean;
+}
+
+const { cover, label, sizes, decorative = true } = Astro.props;
+---
+
+<div class="flex aspect-[2/3] items-end">
+  {
+    cover ? (
+      <Image
+        src={cover.src}
+        alt={decorative ? '' : cover.alt}
+        widths={[200, 300, 400]}
+        width={Math.min(400, cover.src.width)}
+        sizes={sizes}
+        class="h-auto max-h-full w-auto max-w-full border border-rule"
+      />
+    ) : (
+      <div aria-hidden={decorative ? 'true' : undefined} class="size-full">
+        <ImagePlaceholder label={label} class="size-full" />
+      </div>
+    )
+  }
+</div>

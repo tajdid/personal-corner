@@ -24,6 +24,7 @@ A handcrafted, editorial personal website for work, writing, interests and life 
 - [`docs/AUTHORING-PROJECTS.md`](docs/AUTHORING-PROJECTS.md) — adding and editing case studies and side projects
 - [`docs/AUTHORING-WRITING.md`](docs/AUTHORING-WRITING.md) — adding and editing articles
 - [`docs/AUTHORING-MUSIC.md`](docs/AUTHORING-MUSIC.md) — updating the Music page's playlists, albums and artwork
+- [`docs/AUTHORING-BOOKS.md`](docs/AUTHORING-BOOKS.md) — replacing the Books page's sample entries and covers
 - [`docs/references/homepage-desktop.png`](docs/references/homepage-desktop.png) — selected Figma concept screenshot
 
 ## Getting started in Cursor with Claude Code
