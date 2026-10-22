@@ -1,9 +1,15 @@
 ---
 /**
  * Decorative hover stickers for "Around here" links (CollectionLink or LinkRow
- * with `sticker`). Include once per page. Progressive enhancement:
- * only active with a fine pointer that can hover and without reduced motion;
- * otherwise the overlay stays hidden and the links behave normally.
+ * with `sticker`). Include once per page. Progressive enhancement: only active
+ * with a fine pointer that can hover; otherwise the overlay stays hidden and the
+ * links behave normally. The links themselves never move.
+ *
+ * placement="pointer" (default, homepage): follows the pointer, above and to the
+ *   side; disabled under reduced motion.
+ * placement="gutter" (About): sits in the empty label column beside the list,
+ *   below `gutterHeading`, following the pointer vertically only. Stationary under
+ *   reduced motion, hidden on scroll and page exit, off below 48rem.
  */
 import { Image } from 'astro:assets';
 import music from '../assets/stickers/music.png';
@@ -12,6 +18,14 @@ import films from '../assets/stickers/films.png';
 import games from '../assets/stickers/games.png';
 import travel from '../assets/stickers/travel.png';
 import bookmarks from '../assets/stickers/bookmarks.png';
+
+interface Props {
+  placement?: 'pointer' | 'gutter';
+  /** id of the section heading at the top of the gutter column (gutter placement). */
+  gutterHeading?: string;
+}
+
+const { placement = 'pointer', gutterHeading } = Astro.props;
 
 const MAX_SIDE = 150;
 const stickers = { music, books, films, games, travel, bookmarks };
@@ -30,7 +44,14 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
 });
 ---
 
-<div class="sticker-overlay" data-sticker-overlay aria-hidden="true" hidden>
+<div
+  class="sticker-overlay"
+  data-sticker-overlay
+  data-placement={placement}
+  data-gutter-heading={gutterHeading}
+  aria-hidden="true"
+  hidden
+>
   {
     sized.map(({ slug, src, width, height, tilt }) => (
       <Image
@@ -93,15 +114,23 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
   const EDGE = 12; // px kept clear of the viewport edges
   const OFFSET_X = 18;
   const OFFSET_Y = 22;
+  const GUTTER_GAP = 24; // px kept between a gutter sticker and the list
+  const GUTTER_INSET = 16; // px kept below the section heading
 
   function setup(): () => void {
     const overlay = document.querySelector<HTMLElement>('[data-sticker-overlay]');
     const links = document.querySelectorAll<HTMLAnchorElement>('a[data-sticker-link]');
     if (!overlay || links.length === 0) return () => {};
 
+    const gutter = overlay.dataset.placement === 'gutter';
+    const heading = gutter ? document.getElementById(overlay.dataset.gutterHeading ?? '') : null;
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const enabled = () => canHover.matches && !reduceMotion.matches;
+    const wideEnough = window.matchMedia('(min-width: 48rem)'); // gutter column exists
+    // Pointer placement relies on motion; gutter placement can sit still instead.
+    const enabled = () =>
+      gutter ? canHover.matches && wideEnough.matches && Boolean(heading) : canHover.matches && !reduceMotion.matches;
+    const following = () => !(gutter && reduceMotion.matches);
 
     const controller = new AbortController();
     const { signal } = controller;
@@ -115,6 +144,9 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     let activeLink: HTMLAnchorElement | null = null;
     let frame = 0;
     let visible = false;
+    // Gutter geometry, measured on enter and after scroll/resize, not on every move.
+    let area: { left: number; width: number; top: number; bottom: number } | null = null;
+    let rowCentre = 0;
     const target = { x: 0, y: 0 };
     const pos = { x: 0, y: 0 };
 
@@ -137,6 +169,41 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
       target.y = Math.min(Math.max(y, EDGE), vh - h - EDGE);
     }
 
+    function measureGutter() {
+      if (!activeLink || !heading) return;
+      const list = activeLink.closest('ul') ?? activeLink;
+      const h = heading.getBoundingClientRect();
+      const l = list.getBoundingClientRect();
+      const r = activeLink.getBoundingClientRect();
+      area = {
+        left: h.left,
+        width: Math.max(0, l.left - GUTTER_GAP - h.left),
+        top: h.bottom + GUTTER_INSET,
+        bottom: l.bottom,
+      };
+      rowCentre = r.top + r.height / 2;
+    }
+
+    // Gutter placement: inside the empty label column, never over any text; shrinks
+    // to the column width and follows the pointer vertically within the list.
+    function placeInGutter(clientY: number) {
+      if (!activeImg) return;
+      if (!area) measureGutter();
+      if (!area) return;
+      const scale = Math.min(1, area.width / Number(activeImg.dataset.w));
+      const w = Number(activeImg.dataset.w) * scale;
+      const h = Number(activeImg.dataset.h) * scale;
+      activeImg.style.width = `${w}px`;
+      activeImg.style.height = `${h}px`;
+      const anchor = following() ? clientY : rowCentre;
+      const min = Math.max(area.top, EDGE);
+      // The small tilt makes the drawn box a few px taller than h; leave room for it.
+      const tiltAllowance = Math.ceil(w * 0.07);
+      const max = Math.min(area.bottom - h - tiltAllowance, window.innerHeight - h - EDGE);
+      target.x = area.left + (area.width - w) / 2;
+      target.y = Math.max(min, Math.min(anchor - h / 2, max));
+    }
+
     function tick() {
       frame = 0;
       pos.x += (target.x - pos.x) * EASE;
@@ -148,8 +215,18 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     }
 
     const kick = () => {
+      if (!following()) {
+        // Reduced motion: jump straight to the resting position, no easing.
+        pos.x = target.x;
+        pos.y = target.y;
+        overlay!.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+        return;
+      }
       if (!frame) frame = requestAnimationFrame(tick);
     };
+
+    const position = (event: PointerEvent) =>
+      gutter ? placeInGutter(event.clientY) : place(event.clientX, event.clientY);
 
     function show(img: HTMLImageElement) {
       if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
@@ -174,11 +251,12 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
       if (!enabled() || event.pointerType !== 'mouse') return;
       const link = event.currentTarget as HTMLAnchorElement;
       activeLink = link;
+      area = null;
 
       const img = images.get(link.dataset.stickerLink ?? '') ?? null;
       if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
       activeImg = img;
-      place(event.clientX, event.clientY);
+      position(event);
       // A missing or failed illustration just leaves the normal link.
       if (img && isReady(img)) show(img);
       else hide();
@@ -187,7 +265,7 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
 
     function onMove(event: PointerEvent) {
       if (!activeLink || event.currentTarget !== activeLink) return;
-      place(event.clientX, event.clientY);
+      position(event);
       if (activeImg && !visible && isReady(activeImg)) show(activeImg);
       kick();
     }
@@ -220,6 +298,17 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     });
     canHover.addEventListener('change', applyMode, { signal });
     reduceMotion.addEventListener('change', applyMode, { signal });
+    if (gutter) {
+      wideEnough.addEventListener('change', applyMode, { signal });
+      // Hide while scrolling; the next pointer move re-measures and shows it again.
+      const onScroll = () => {
+        area = null;
+        hide();
+      };
+      window.addEventListener('scroll', onScroll, { passive: true, signal });
+      window.addEventListener('resize', onScroll, { passive: true, signal });
+      window.addEventListener('pagehide', reset, { signal });
+    }
     applyMode();
 
     return () => {

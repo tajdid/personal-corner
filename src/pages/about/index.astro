@@ -9,24 +9,6 @@ import { collections } from '../../data/home';
 import { profiles } from '../../data/profiles';
 import { routes } from '../../lib/routes';
 
-// Biography copy is placeholder until Taj supplies it (docs/CONTENT.md).
-const placeholderTag = 'text-xs text-muted';
-
-const bioParagraphs = [
-  {
-    theme: 'Finding design',
-    text: 'A paragraph on my background, how I came to design and what my work involves today.',
-  },
-  {
-    theme: 'Beyond work',
-    text: 'A paragraph on the things I spend time on outside of work, and why they matter to me.',
-  },
-  {
-    theme: 'The thread between',
-    text: 'A paragraph on the thread that ties the work and the interests together.',
-  },
-];
-
 // About-specific descriptions; routes come from the shared collection data, so a
 // destination that doesn't exist renders as pending text rather than a link.
 const aroundHere = [
@@ -84,15 +66,23 @@ const textLink =
   </div>
 
   <HomeSection id={bioId} title="A little more about me">
-    <div class="max-w-[38rem] space-y-8">
-      {
-        bioParagraphs.map(({ theme, text }) => (
-          <div>
-            <p class={placeholderTag}>Placeholder copy · {theme}</p>
-            <p class="mt-2 text-lg leading-relaxed">{text}</p>
-          </div>
-        ))
-      }
+    <!-- Keep each linked phrase on one line: Astro drops whitespace at line breaks next to tags. -->
+    <div class="max-w-[38rem] space-y-6 text-lg leading-relaxed">
+      <p>
+        <em>Making things for the internet.</em> What started around the age of 15 has become a career in product design. I’m interested in how things work, how they feel to use, and the small decisions that make them clearer and more useful.
+      </p>
+      <p>
+        Alongside my <a href={routes.work} class={textLink}>work</a>, this site gives me somewhere to share side projects, collect interesting things and leave room for ideas that might become something.
+      </p>
+      <p>
+        My taste in <a href={routes.collection('music')} class={textLink}>music</a> wanders across genres. I’ve gathered a few playlists and some albums I keep coming back to. There’s also a shelf for <a href={routes.collection('books')} class={textLink}>books</a>, a place for <a href={routes.collection('films')} class={textLink}>films</a>, and another for <a href={routes.collection('games')} class={textLink}>games</a>—different ways to find a good story or get lost in a new world.
+      </p>
+      <p>
+        <a href={routes.writing} class={textLink}>Writing</a> gives me a space to think things through. <a href={routes.collection('bookmarks')} class={textLink}>Bookmarks</a> is where I keep interesting corners of the internet within reach.
+      </p>
+      <p>
+        I’d like this little corner to grow with me: part collection, part notebook, and always a work in progress.
+      </p>
     </div>
   </HomeSection>
 
@@ -102,7 +92,7 @@ const textLink =
     <ul class="mt-10 [&>li:first-child>*]:pt-0 [&>li:last-child]:border-b-0 [&>li:last-child>*]:pb-0">
       {aroundHere.map((item) => <LinkRow {...item} sticker={item.slug} />)}
     </ul>
-    <AroundHereStickers />
+    <AroundHereStickers placement="gutter" gutterHeading="around-here" />
   </HomeSection>
 
   <HomeSection id="elsewhere" title="Elsewhere">
