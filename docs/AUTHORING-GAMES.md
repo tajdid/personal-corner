@@ -4,25 +4,28 @@ The Games page (`/games`) is built from `src/data/games.ts`, and the layout live
 
 ## Current games
 
-Games with `section: 'current'` appear under "Currently playing", sorted by `order`:
+Games with `section: 'current'` appear under "Currently playing" as wide cards, sorted by `order`. Each card uses the cover, blurred, as its background:
 
 ```ts
-{ id: 'pokemon-pokopia', title: 'Pokémon Pokopia', section: 'current', order: 2,
+{ id: 'pokemon-pokopia', title: 'Pokémon Pokopia', section: 'current', order: 3,
   artwork: { src: pokemonPokopia, alt: 'Pokémon Pokopia box art' },
-  playingOn: 'Nintendo Switch 2',
+  playingOn: 'Nintendo Switch 2',   // shown as "Console"
+  released: '2026-03',              // first release month, shown as "March 2026"
   note: 'Optional one or two sentences in your own words.' }
 ```
 
 - `playingOn` is the device you're playing on. It isn't the game's original platform.
+- `released` is the game's first release month anywhere (FireRed: January 2004, Japan).
 - `note` is optional; leave it out and nothing extra shows.
 - When you finish a game, change its `section` to `'collection'` and give it an `order` there, or remove it.
 
 ## Collection entries
 
-Games with `section: 'collection'` appear under "From my collection", sorted by `order`. This is a list of played games, not a ranking.
+Games with `section: 'collection'` appear under "From my collection", grouped by `platform` and sorted by `order` within each group. Only covers are shown, four to a row; each cover's `alt` text names the game. This is a list of played games, not a ranking.
 
-- `year` is optional. Only add it when it tells editions apart, e.g. Tomb Raider (2013).
-- `platform` is optional. Only add it when you're sure.
+- `platform` is the console you played it on: one of `platforms` in `src/data/games.ts` (Nintendo Switch, Game Boy Advance, Game Boy, PlayStation, Xbox 360). Groups appear in that order, and empty groups are hidden. Add a value to `platforms` to create a new group.
+- A collection game with no `platform` doesn't appear.
+- `year` is optional and only kept in the data to tell editions apart, e.g. Tomb Raider (2013).
 - `url` makes the title a link that opens in a new tab. Only add a verified page.
 
 ## Artwork
@@ -37,7 +40,7 @@ Covers are fitted into a shared portrait area without cropping and sit on a comm
 
 Each cover was matched to the exact title and edition before use, and saved once.
 
-- **Wikipedia** (English article infobox covers, via the page-summary API): Assassin's Creed (2007), Tomb Raider (2013), Ghost of Tsushima, Pokémon Emerald, Persona 3 Reload, The Legend of Zelda: Breath of the Wild, Marvel's Spider-Man: Miles Morales, Super Mario Odyssey and Pokémon Pokopia.
+- **Wikipedia** (English article infobox covers, via the page-summary API): The Last of Us Part I, Assassin's Creed (2007), Tomb Raider (2013), Ghost of Tsushima, Pokémon Emerald, Persona 3 Reload, The Legend of Zelda: Breath of the Wild, Marvel's Spider-Man: Miles Morales, Super Mario Odyssey and Pokémon Pokopia.
 - **Wikipedia, cropped from combined cover images:**
   - Pokémon FireRed (left half of "FireRed and LeafGreen")
   - Pokémon Ruby and Pokémon Sapphire (halves of "Ruby and Sapphire")

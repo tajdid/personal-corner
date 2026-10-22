@@ -12,28 +12,47 @@ interface Props {
   artwork?: Artwork;
   label: string;
   sizes: string;
-  /** Tailwind aspect class for the artwork area. */
+  /** Tailwind aspect class for the artwork area; 'natural' sizes the cover to its own proportions. */
   aspect?: string;
+  /** Decorative when a visible title sits beside the cover; otherwise the cover carries the name. */
+  decorative?: boolean;
 }
 
-const { artwork, label, sizes, aspect = 'aspect-[3/4]' } = Astro.props;
+const { artwork, label, sizes, aspect = 'aspect-[3/4]', decorative = true } = Astro.props;
 ---
 
-<div class:list={['flex items-end', aspect]}>
-  {
+{
+  aspect === 'natural' ? (
     artwork ? (
       <Image
         src={artwork.src}
-        alt=""
+        alt={decorative ? '' : artwork.alt}
         widths={[160, 240, 360, 480]}
         width={Math.min(480, artwork.src.width)}
         sizes={sizes}
-        class="h-auto max-h-full w-auto max-w-full rounded-sm border border-rule"
+        class="h-auto w-full rounded-sm border border-rule"
       />
     ) : (
-      <div aria-hidden="true" class="size-full">
-        <ImagePlaceholder label={label} class="size-full" />
+      <div aria-hidden={decorative ? 'true' : undefined}>
+        <ImagePlaceholder label={label} class="aspect-[3/4]" />
       </div>
     )
-  }
-</div>
+  ) : (
+    <div class:list={['flex items-end', aspect]}>
+      {artwork ? (
+        <Image
+          src={artwork.src}
+          alt={decorative ? '' : artwork.alt}
+          widths={[160, 240, 360, 480]}
+          width={Math.min(480, artwork.src.width)}
+          sizes={sizes}
+          class="h-auto max-h-full w-auto max-w-full rounded-sm border border-rule"
+        />
+      ) : (
+        <div aria-hidden={decorative ? 'true' : undefined} class="size-full">
+          <ImagePlaceholder label={label} class="size-full" />
+        </div>
+      )}
+    </div>
+  )
+}
