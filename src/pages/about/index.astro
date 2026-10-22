@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import PageLayout from '../../layouts/PageLayout.astro';
 import HomeSection from '../../components/HomeSection.astro';
 import LinkRow from '../../components/LinkRow.astro';
+import AroundHereStickers from '../../components/AroundHereStickers.astro';
 import stampsArtwork from '../../assets/about/stamps.png';
 import { collections } from '../../data/home';
 import { profiles } from '../../data/profiles';
@@ -97,13 +98,15 @@ const textLink =
 
   <HomeSection id="around-here" title="Around here">
     <p class="text-xl sm:text-[1.375rem]">A few things, gathered in one place.</p>
-    <ul class="mt-8 border-t border-rule">
-      {aroundHere.map((item) => <LinkRow {...item} />)}
+    <!-- Dividers between rows only (no rule above the first or below the last). -->
+    <ul class="mt-10 [&>li:first-child>*]:pt-0 [&>li:last-child]:border-b-0 [&>li:last-child>*]:pb-0">
+      {aroundHere.map((item) => <LinkRow {...item} sticker={item.slug} />)}
     </ul>
+    <AroundHereStickers />
   </HomeSection>
 
   <HomeSection id="elsewhere" title="Elsewhere">
-    <ul class="border-t border-rule">
+    <ul class="[&>li:first-child>*]:pt-0 [&>li:last-child]:border-b-0 [&>li:last-child>*]:pb-0">
       {
         profiles.map(({ name, description, url }) => (
           <LinkRow

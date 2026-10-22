@@ -14,6 +14,8 @@ interface Props {
   external?: boolean;
   rel?: string;
   pendingLabel?: string;
+  /** Opt in to the hover sticker for this slug (AroundHereStickers on the page). */
+  sticker?: string;
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   external = false,
   rel,
   pendingLabel = 'Coming later',
+  sticker,
 } = Astro.props;
 
 // noopener/noreferrer keep the new tab from reaching back into this page.
@@ -39,19 +42,27 @@ const grid = 'sm:grid-cols-[9rem_minmax(0,1fr)_auto]';
         href={href}
         target={external ? '_blank' : undefined}
         rel={linkRel}
+        data-sticker-link={sticker}
         class:list={[
           'group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 py-5',
           grid,
         ]}
       >
-        <span class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]">
+        <span
+          class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]"
+          data-magnet={sticker ? '' : undefined}
+        >
           {label}
           {external && <span class="sr-only">(opens in a new tab)</span>}
         </span>
         <span class="col-start-1 text-[0.9375rem] text-muted sm:col-start-2 sm:row-start-1">
           {description}
         </span>
-        <span aria-hidden="true" class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3">
+        <span
+          aria-hidden="true"
+          class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3"
+          data-magnet={sticker ? '' : undefined}
+        >
           {arrow}
         </span>
       </a>

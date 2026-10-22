@@ -1,7 +1,8 @@
 ---
 /**
- * Decorative hover stickers and a gentle magnetic title for the homepage
- * "Around here" links (CollectionLink with `sticker`). Progressive enhancement:
+ * Decorative hover stickers and a gentle magnetic title for "Around here" links
+ * (CollectionLink or LinkRow with `sticker`). Include once per page.
+ * Elements marked data-magnet inside a link move; the link itself never does. Progressive enhancement:
  * only active with a fine pointer that can hover and without reduced motion;
  * otherwise the overlay stays hidden and the links behave normally.
  */
@@ -124,7 +125,7 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
 
     let activeImg: HTMLImageElement | null = null;
     let activeLink: HTMLAnchorElement | null = null;
-    let magnet: HTMLElement | null = null;
+    let magnets: HTMLElement[] = [];
     let linkRect: DOMRect | null = null;
     let frame = 0;
     let visible = false;
@@ -168,7 +169,8 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
       pull.x += (pullTarget.x - pull.x) * EASE;
       pull.y += (pullTarget.y - pull.y) * EASE;
       overlay!.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
-      if (magnet) magnet.style.transform = `translate3d(${pull.x.toFixed(2)}px, ${pull.y.toFixed(2)}px, 0)`;
+      const shift = `translate3d(${pull.x.toFixed(2)}px, ${pull.y.toFixed(2)}px, 0)`;
+      for (const el of magnets) el.style.transform = shift;
 
       const settled =
         Math.abs(target.x - pos.x) < 0.1 &&
@@ -183,10 +185,11 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     };
 
     function releaseMagnet() {
-      if (!magnet) return;
-      magnet.classList.remove('is-tracking');
-      magnet.style.transform = ''; // CSS transition eases it home
-      magnet = null;
+      for (const el of magnets) {
+        el.classList.remove('is-tracking');
+        el.style.transform = ''; // CSS transition eases it home
+      }
+      magnets = [];
       pull.x = pull.y = pullTarget.x = pullTarget.y = 0;
     }
 
@@ -212,11 +215,11 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     function onEnter(event: PointerEvent) {
       if (!enabled() || event.pointerType !== 'mouse') return;
       const link = event.currentTarget as HTMLAnchorElement;
-      if (magnet && activeLink !== link) releaseMagnet();
+      if (magnets.length && activeLink !== link) releaseMagnet();
       activeLink = link;
       linkRect = null;
-      magnet = link.querySelector<HTMLElement>('[data-magnet]');
-      magnet?.classList.add('is-tracking');
+      magnets = [...link.querySelectorAll<HTMLElement>('[data-magnet]')];
+      magnets.forEach((el) => el.classList.add('is-tracking'));
 
       const img = images.get(link.dataset.stickerLink ?? '') ?? null;
       if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
