@@ -86,4 +86,19 @@ export const countries = [...allCountries].sort((a, b) => a.name.localeCompare(b
 export const stats = {
   countries: new Set(countries.map((country) => country.id)).size,
   continents: new Set(countries.map((country) => country.continent)).size,
+  /** Every listed destination: cities, districts, regions, states and islands together. */
+  places: countries.reduce((total, country) => total + country.destinations.length, 0),
 };
+
+/** Countries per continent, most first, e.g. [['Europe', 10], …]. */
+export const continentCounts = Object.entries(
+  countries.reduce<Record<string, number>>((acc, country) => {
+    acc[country.continent] = (acc[country.continent] ?? 0) + 1;
+    return acc;
+  }, {}),
+).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+/** Destinations with a personal photo, with their country, for the snapshots strip. */
+export const snapshots = countries.flatMap((country) =>
+  country.destinations.filter((d) => d.image).map((d) => ({ ...d, country })),
+);

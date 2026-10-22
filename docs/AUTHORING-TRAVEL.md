@@ -41,12 +41,12 @@ Only use photos you took, and only where you're sure where they were taken.
 place('florence', 'Florence', { image: { src: florencePhoto, alt: 'Describe what the photo shows.' } }),
 ```
 
-Photos are shown at 3:2, cropped from the centre. Destinations without a photo show as a short text entry with a small location pin.
+Photographed destinations appear in the "Snapshots" strip above the country list, at 4:3, cropped from the centre and captioned with the place and country. Every destination also appears in its country's list.
 
 The current photos are Paris (the Louvre's inverted pyramid, so the location is visible in the photo) and Warsaw. Warsaw's location comes only from the photo's original filename, `warsaw-poland.png`, so confirm it's right.
 
 ## How the stats are calculated
 
-"Countries" counts the unique country `id`s, and "continents" counts the unique `continent` values, both from the list. Neither is typed in separately, so adding a country updates them automatically.
+"Countries" counts the unique country `id`s, and "continents" counts the unique `continent` values, both from the list. "Cities, regions & islands" counts every destination across all countries (cities, districts, regions, states and islands together). The per-continent line below the stats (e.g. "Europe 10") is counted the same way. None of these is typed in separately, so adding a country updates them automatically.
 
 Run `npm run check` and `npm run build` before committing.

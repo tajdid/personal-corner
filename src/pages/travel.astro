@@ -2,7 +2,10 @@
 import { Image } from 'astro:assets';
 import PageLayout from '../layouts/PageLayout.astro';
 import HomeSection from '../components/HomeSection.astro';
-import { countries, stats } from '../data/travel';
+import { continentCounts, countries, snapshots, stats } from '../data/travel';
+import { profiles } from '../data/profiles';
+
+const instagram = profiles.find((profile) => profile.name === 'Instagram')?.url;
 ---
 
 <PageLayout title="Travel — Tajdid Rahman" description="Places Taj has been, from trips further afield to somewhere closer to home.">
@@ -15,88 +18,106 @@ import { countries, stats } from '../data/travel';
         <p class="mt-8 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
           Places I’ve been, from trips further afield to somewhere closer to home.
         </p>
-        <dl class="mt-10 flex gap-12">
-          <div>
-            <dt class="sr-only">Countries</dt>
-            <dd class="text-4xl font-semibold tracking-tight sm:text-5xl">{stats.countries}</dd>
-            <dd aria-hidden="true" class="mt-1 text-sm text-muted">countries</dd>
-          </div>
-          <div>
-            <dt class="sr-only">Continents</dt>
-            <dd class="text-4xl font-semibold tracking-tight sm:text-5xl">{stats.continents}</dd>
-            <dd aria-hidden="true" class="mt-1 text-sm text-muted">continents</dd>
-          </div>
-        </dl>
-        <p class="mt-6 text-xs text-muted">An ongoing collection, still being filled in.</p>
+
+        <div class="mt-12 border-t border-rule pt-8">
+          <dl class="flex flex-wrap items-end gap-x-14 gap-y-6">
+            <div>
+              <dt class="sr-only">Countries</dt>
+              <dd class="text-6xl leading-none font-semibold tracking-tight sm:text-7xl">{stats.countries}</dd>
+              <dd aria-hidden="true" class="mt-3 text-sm text-muted">countries</dd>
+            </div>
+            <div>
+              <dt class="sr-only">Continents</dt>
+              <dd class="text-6xl leading-none font-semibold tracking-tight sm:text-7xl">{stats.continents}</dd>
+              <dd aria-hidden="true" class="mt-3 text-sm text-muted">continents</dd>
+            </div>
+            <div>
+              <dt class="sr-only">Cities, regions and islands</dt>
+              <dd class="text-6xl leading-none font-semibold tracking-tight sm:text-7xl">{stats.places}</dd>
+              <dd aria-hidden="true" class="mt-3 text-sm text-muted">cities, regions &amp; islands</dd>
+            </div>
+          </dl>
+          <p class="mt-6 text-[0.9375rem]">
+            {
+              continentCounts.map(([continent, count], index) => (
+                <>
+                  {index > 0 && <span aria-hidden="true" class="mx-2 text-rule">/</span>}
+                  <span class="whitespace-nowrap">
+                    {continent} <span class="text-muted">{count}</span>
+                  </span>
+                </>
+              ))
+            }
+          </p>
+          <p class="mt-3 text-xs text-muted">An ongoing collection, still being filled in.</p>
+        </div>
       </div>
     </div>
   </div>
 
+  {
+    snapshots.length > 0 && (
+      <HomeSection id="snapshots" title="Snapshots">
+        <ul class="grid gap-6 sm:grid-cols-2 sm:gap-8">
+          {snapshots.map((d) => (
+            <li>
+              <figure>
+                <Image
+                  src={d.image!.src}
+                  alt={d.image!.alt}
+                  widths={[480, 720, 960]}
+                  width={960}
+                  sizes="(min-width: 68rem) 25rem, (min-width: 40rem) 45vw, 100vw"
+                  class="aspect-[4/3] w-full rounded-sm border border-rule object-cover"
+                />
+                <figcaption class="mt-3 flex items-baseline gap-2 text-[0.9375rem]">
+                  <span aria-hidden="true">{d.country.flag}</span>
+                  <span>
+                    {d.name}<span class="text-muted">, {d.country.name}</span>
+                  </span>
+                </figcaption>
+                {d.caption && <p class="mt-1 text-sm text-muted">{d.caption}</p>}
+              </figure>
+            </li>
+          ))}
+        </ul>
+        {instagram && (
+          <p class="mt-8 text-[0.9375rem]">
+            <a href={instagram} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline hover:underline-offset-4">
+              More travel shots on Instagram <span aria-hidden="true">↗</span><span class="sr-only">{' (opens in a new tab)'}</span>
+            </a>
+          </p>
+        )}
+      </HomeSection>
+    )
+  }
+
   <HomeSection id="places-ive-been" title="Places I’ve been">
-    <!-- One row per country: name and flag on the left, destinations on the right. -->
-    <div>
+    <!-- No rule above the first row (1, 2 or 3 blocks depending on the column count). -->
+    <div class="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3 [&>section:first-child]:border-t-0 [&>section:first-child]:pt-0 sm:[&>section:nth-child(-n+2)]:border-t-0 sm:[&>section:nth-child(-n+2)]:pt-0 lg:[&>section:nth-child(-n+3)]:border-t-0 lg:[&>section:nth-child(-n+3)]:pt-0">
       {
-        countries.map((country) => {
-          const withPhotos = country.destinations.filter((d) => d.image);
-          const textOnly = country.destinations.filter((d) => !d.image);
-          return (
-            <section
-              aria-labelledby={`country-${country.id}`}
-              class="border-t border-rule py-5 first:border-t-0 first:pt-0 last:pb-0 sm:grid sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-x-6 sm:py-6"
-            >
-              <h3 id={`country-${country.id}`} class="flex items-baseline gap-2.5 text-[0.9375rem]">
-                <span aria-hidden="true" class="text-base leading-none">{country.flag}</span>
-                <span>{country.name}</span>
-              </h3>
-
-              <div class="mt-3 sm:mt-0">
-                {withPhotos.length > 0 && (
-                  <ul class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    {withPhotos.map((d) => (
-                      <li>
-                        <figure>
-                          <Image
-                            src={d.image!.src}
-                            alt={d.image!.alt}
-                            widths={[320, 480, 640]}
-                            width={640}
-                            sizes="(min-width: 68rem) 15rem, (min-width: 40rem) 28vw, 45vw"
-                            class="aspect-[3/2] w-full rounded-sm border border-rule object-cover"
-                          />
-                          <figcaption class="mt-2 text-[0.9375rem]">
-                            {d.name}
-                            {d.home && <span class="ml-2 text-xs text-accent">Home</span>}
-                            {d.caption && <span class="mt-1 block text-sm text-muted">{d.caption}</span>}
-                          </figcaption>
-                        </figure>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {textOnly.length > 0 ? (
-                  <ul class="grid grid-cols-2 gap-x-6 gap-y-2 min-[50rem]:grid-cols-3">
-                    {textOnly.map((d) => (
-                      <li class="flex items-baseline gap-2 text-[0.9375rem]">
-                        <svg aria-hidden="true" viewBox="0 0 12 16" class="h-3 w-2.5 shrink-0 translate-y-px fill-none stroke-muted" stroke-width="1.5">
-                          <path d="M6 15s5-5.2 5-8.8A5 5 0 0 0 1 6.2C1 9.8 6 15 6 15Z" />
-                          <circle cx="6" cy="6.2" r="1.7" />
-                        </svg>
-                        <span>
-                          {d.name}
-                          {d.home && <span class="ml-2 text-xs text-accent">Home</span>}
-                          {d.caption && <span class="block text-sm text-muted">{d.caption}</span>}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  withPhotos.length === 0 && <p class="text-sm text-muted">Places to be added</p>
-                )}
-              </div>
-            </section>
-          );
-        })
+        countries.map((country) => (
+          <section aria-labelledby={`country-${country.id}`} class="border-t border-rule pt-4 pb-7">
+            <h3 id={`country-${country.id}`} class="flex items-center gap-3 text-lg leading-snug">
+              <span aria-hidden="true" class="text-2xl leading-none">{country.flag}</span>
+              <span>{country.name}</span>
+            </h3>
+            {country.destinations.length > 0 ? (
+              <ul class="mt-3 space-y-1.5 pl-[2.375rem] text-[0.9375rem]">
+                {country.destinations.map((d) => (
+                  <li class="text-ink/85">
+                    {d.name}
+                    {d.home && (
+                      <span class="ml-2 rounded-full border border-accent/30 px-1.5 py-px text-[0.6875rem] text-accent">Home</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="mt-3 pl-[2.375rem] text-sm text-muted">Places to be added</p>
+            )}
+          </section>
+        ))
       }
     </div>
   </HomeSection>
