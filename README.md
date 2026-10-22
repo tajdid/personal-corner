@@ -27,6 +27,7 @@ A handcrafted, editorial personal website for work, writing, interests and life 
 - [`docs/AUTHORING-BOOKS.md`](docs/AUTHORING-BOOKS.md) — replacing the Books page's sample entries and covers
 - [`docs/AUTHORING-FILMS.md`](docs/AUTHORING-FILMS.md) — syncing the Films page from Letterboxd
 - [`docs/AUTHORING-GAMES.md`](docs/AUTHORING-GAMES.md) — updating the Games page's games, artwork and consoles
+- [`docs/AUTHORING-TRAVEL.md`](docs/AUTHORING-TRAVEL.md) — adding countries, destinations and photos to the Travel page
 - [`docs/references/homepage-desktop.png`](docs/references/homepage-desktop.png) — selected Figma concept screenshot
 
 ## Getting started in Cursor with Claude Code
