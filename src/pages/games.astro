@@ -34,7 +34,7 @@ const formatMonth = (yearMonth: string) =>
   </div>
 
   <HomeSection id="currently-playing" title="Currently playing">
-    <ul class="space-y-6 sm:space-y-8">
+    <ul class="space-y-4 sm:space-y-5">
       {
         currentlyPlaying.map((game) => (
           <li class="relative isolate overflow-hidden rounded-3xl bg-ink text-paper sm:rounded-[2rem]">
@@ -47,19 +47,19 @@ const formatMonth = (yearMonth: string) =>
               />
             )}
             <div aria-hidden="true" class="game-scrim absolute inset-0 -z-10" />
-            <div class="flex items-center gap-5 p-5 sm:gap-10 sm:p-8 lg:p-10">
+            <div class="flex items-center gap-5 p-4 sm:gap-8 sm:p-6">
               {game.artwork && (
                 <Image
                   src={game.artwork.src}
                   alt=""
                   widths={[160, 240, 320]}
                   width={Math.min(320, game.artwork.src.width)}
-                  sizes="(min-width: 40rem) 9rem, 6rem"
-                  class="aspect-[3/4] w-24 shrink-0 rounded-lg object-cover shadow-lg sm:w-36"
+                  sizes="(min-width: 40rem) 7rem, 5rem"
+                  class="aspect-[3/4] w-20 shrink-0 rounded-md object-cover shadow-lg sm:w-28"
                 />
               )}
               <div class="min-w-0">
-                <h3 class="text-xl leading-snug sm:text-[1.75rem]">
+                <h3 class="text-xl leading-snug sm:text-2xl">
                   {game.url ? (
                     <a href={game.url} {...newTab} class="text-paper underline-offset-4 hover:underline">
                       {game.title}
@@ -95,23 +95,27 @@ const formatMonth = (yearMonth: string) =>
   </HomeSection>
 
   <HomeSection id="from-my-collection" title="From my collection">
-    <div class="space-y-12 sm:space-y-14">
+    <!-- One row per console: name on the left, up to four same-size covers on the right. -->
+    <div class="[&>section:first-child]:border-t-0 [&>section:first-child]:pt-0">
       {
         collectionByPlatform.map(({ platform, games }) => (
-          <section aria-labelledby={`platform-${slug(platform)}`}>
-            <h3 id={`platform-${slug(platform)}`} class="text-xs text-muted">
+          <section
+            aria-labelledby={`platform-${slug(platform)}`}
+            class="border-t border-rule py-6 first:pt-0 last:pb-0 sm:grid sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-x-6 sm:py-8"
+          >
+            <h3 id={`platform-${slug(platform)}`} class="text-[0.9375rem] sm:pt-1">
               {platform}
             </h3>
-            <ul class="mt-4 grid grid-cols-2 items-end gap-5 sm:grid-cols-4 sm:gap-8">
+            <ul class="mt-4 grid grid-cols-3 gap-3 min-[30rem]:grid-cols-4 sm:mt-0 sm:gap-5">
               {games.map((game) => (
                 <li>
                   {game.url ? (
                     <a href={game.url} {...newTab} class="block rounded-sm">
-                      <GameCover artwork={game.artwork} label={game.title} sizes="(min-width: 68rem) 11rem, (min-width: 40rem) 22vw, 45vw" aspect="natural" decorative={false} />
+                      <GameCover artwork={game.artwork} label={game.title} sizes="(min-width: 68rem) 9rem, (min-width: 30rem) 22vw, 30vw" aspect="tile" decorative={false} />
                       <span class="sr-only">{' (opens in a new tab)'}</span>
                     </a>
                   ) : (
-                    <GameCover artwork={game.artwork} label={game.title} sizes="(min-width: 68rem) 11rem, (min-width: 40rem) 22vw, 45vw" aspect="natural" decorative={false} />
+                    <GameCover artwork={game.artwork} label={game.title} sizes="(min-width: 68rem) 9rem, (min-width: 30rem) 22vw, 30vw" aspect="tile" decorative={false} />
                   )}
                 </li>
               ))}

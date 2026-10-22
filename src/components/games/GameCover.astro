@@ -12,17 +12,55 @@ interface Props {
   artwork?: Artwork;
   label: string;
   sizes: string;
-  /** Tailwind aspect class for the artwork area; 'natural' sizes the cover to its own proportions. */
+  /**
+   * Tailwind aspect class for the artwork area; 'natural' sizes the cover to its own
+   * proportions; 'tile' gives every cover the same 3:4 tile (see below).
+   */
   aspect?: string;
   /** Decorative when a visible title sits beside the cover; otherwise the cover carries the name. */
   decorative?: boolean;
 }
 
 const { artwork, label, sizes, aspect = 'aspect-[3/4]', decorative = true } = Astro.props;
+
+// Tile mode: covers within ~8% of 3:4 fill the tile; other shapes (square Game Boy
+// boxes, wide key art) are shown whole over a blurred copy of themselves.
+const fillsTile = artwork ? Math.abs(artwork.src.width / artwork.src.height - 0.75) < 0.06 : false;
 ---
 
 {
-  aspect === 'natural' ? (
+  aspect === 'tile' ? (
+    <div class="relative isolate aspect-[3/4] overflow-hidden rounded-sm border border-rule bg-ink/5">
+      {artwork ? (
+        fillsTile ? (
+          <Image
+            src={artwork.src}
+            alt={decorative ? '' : artwork.alt}
+            widths={[160, 240, 360, 480]}
+            width={Math.min(480, artwork.src.width)}
+            sizes={sizes}
+            class="size-full object-cover"
+          />
+        ) : (
+          <>
+            <Image src={artwork.src} alt="" width={160} class="tile-backdrop absolute inset-0 -z-10 size-full object-cover" />
+            <Image
+              src={artwork.src}
+              alt={decorative ? '' : artwork.alt}
+              widths={[160, 240, 360, 480]}
+              width={Math.min(480, artwork.src.width)}
+              sizes={sizes}
+              class="absolute inset-x-0 top-1/2 w-full -translate-y-1/2 shadow-md"
+            />
+          </>
+        )
+      ) : (
+        <div aria-hidden={decorative ? 'true' : undefined} class="size-full">
+          <ImagePlaceholder label={label} class="size-full border-0" />
+        </div>
+      )}
+    </div>
+  ) : aspect === 'natural' ? (
     artwork ? (
       <Image
         src={artwork.src}
@@ -56,3 +94,11 @@ const { artwork, label, sizes, aspect = 'aspect-[3/4]', decorative = true } = As
     </div>
   )
 }
+
+<style>
+  .tile-backdrop {
+    filter: blur(14px) saturate(1.1);
+    transform: scale(1.3);
+    opacity: 0.85;
+  }
+</style>

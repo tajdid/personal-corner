@@ -21,7 +21,7 @@ Games with `section: 'current'` appear under "Currently playing" as wide cards, 
 
 ## Collection entries
 
-Games with `section: 'collection'` appear under "From my collection", grouped by `platform` and sorted by `order` within each group. Only covers are shown, four to a row; each cover's `alt` text names the game. This is a list of played games, not a ranking.
+Games with `section: 'collection'` appear under "From my collection", one row per console (name on the left, up to four covers on the right), sorted by `order` within each console. Only covers are shown; each cover's `alt` text names the game. This is a list of played games, not a ranking.
 
 - `platform` is the console you played it on: one of `platforms` in `src/data/games.ts` (Nintendo Switch, Game Boy Advance, Game Boy, PlayStation, Xbox 360). Groups appear in that order, and empty groups are hidden. Add a value to `platforms` to create a new group.
 - A collection game with no `platform` doesn't appear.
@@ -34,7 +34,7 @@ Games with `section: 'collection'` appear under "From my collection", grouped by
 2. Import it at the top of `src/data/games.ts` and set `artwork: { src: …, alt: '…' }`.
 3. Leave `artwork` out until you have the right edition's cover. A placeholder shows instead.
 
-Covers are fitted into a shared portrait area without cropping and sit on a common baseline, so square Game Boy boxes and tall modern boxes line up.
+In the collection, every cover sits in the same 3:4 tile. Covers close to 3:4 fill it. Other shapes, such as square Game Boy boxes, are shown whole and centred over a blurred copy of themselves, so nothing is cropped.
 
 ### Current artwork sources
 
