@@ -53,6 +53,11 @@ const textLink =
     <div class="space-y-12 sm:space-y-10">
       {getHomepageProjects().map((project) => <ProjectRow {...project} />)}
     </div>
+    <p class="mt-10 text-sm">
+      <a href={routes.work} class="text-accent hover:underline hover:underline-offset-4">
+        All case studies <span aria-hidden="true">→</span>
+      </a>
+    </p>
   </HomeSection>
 
   <HomeSection id="notes-from-the-internet" number="02" title="Notes from the internet">
