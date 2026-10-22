@@ -1,0 +1,37 @@
+---
+/**
+ * Square cover artwork, or the shared labelled placeholder when none exists.
+ * Decorative by default because a title always sits beside it.
+ */
+import { Image } from 'astro:assets';
+import ImagePlaceholder from '../ImagePlaceholder.astro';
+import type { Artwork } from '../../data/music';
+
+interface Props {
+  artwork?: Artwork;
+  /** Placeholder label when artwork is missing. */
+  label: string;
+  sizes: string;
+  decorative?: boolean;
+  class?: string;
+}
+
+const { artwork, label, sizes, decorative = true, class: className } = Astro.props;
+---
+
+{
+  artwork ? (
+    <Image
+      src={artwork.src}
+      alt={decorative ? '' : artwork.alt}
+      widths={[240, 360, 480, 640]}
+      width={Math.min(640, artwork.src.width)}
+      sizes={sizes}
+      class:list={['aspect-square w-full border border-rule object-cover', className]}
+    />
+  ) : (
+    <div aria-hidden={decorative ? 'true' : undefined}>
+      <ImagePlaceholder label={label} class:list={['aspect-square', className]} />
+    </div>
+  )
+}

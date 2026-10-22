@@ -3,12 +3,15 @@ import type { GetStaticPaths } from 'astro';
 import PlaceholderPage from '../layouts/PlaceholderPage.astro';
 import { collections } from '../data/home';
 
-// Generates only the listed collection slugs (/music, /books, …).
-export const getStaticPaths = (() =>
-  collections.map(({ slug, label }) => ({
-    params: { collection: slug },
-    props: { label },
-  }))) satisfies GetStaticPaths;
+// Placeholder pages for collections without their own page yet (/books, /films, …).
+export const getStaticPaths = (() => {
+  // Collections with a dedicated page in src/pages are skipped to avoid a route clash.
+  // (Defined here: getStaticPaths can't read other frontmatter variables.)
+  const dedicatedPages = new Set(['music']);
+  return collections
+    .filter(({ slug }) => !dedicatedPages.has(slug))
+    .map(({ slug, label }) => ({ params: { collection: slug }, props: { label } }));
+}) satisfies GetStaticPaths;
 
 const { label } = Astro.props;
 ---

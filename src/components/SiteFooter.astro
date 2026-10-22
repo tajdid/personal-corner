@@ -22,7 +22,7 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
                 rel={isExternal(href) ? 'noopener noreferrer' : undefined}
               >
                 {label}
-                {isExternal(href) && <span class="sr-only">(opens in a new tab)</span>}
+                {isExternal(href) && <span class="sr-only">{' (opens in a new tab)'}</span>}
               </a>
             ) : (
               <span class="text-muted">
