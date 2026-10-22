@@ -1,0 +1,103 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import HomeSection from '../components/HomeSection.astro';
+import GameCover from '../components/games/GameCover.astro';
+import { BACKLOGGD_URL, collection, consoleFamilies, currentlyPlaying } from '../data/games';
+
+const linkClass = 'text-accent hover:underline hover:underline-offset-4';
+const newTab = { target: '_blank', rel: 'noopener noreferrer' };
+---
+
+<PageLayout title="Games — Tajdid Rahman" description="Games Taj is playing, has played, and the consoles along the way.">
+  <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
+    <div
+      class="pt-14 pb-16 sm:pt-20 sm:pb-24 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12 md:pt-24"
+    >
+      <div class="md:col-start-2">
+        <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl">Games</h1>
+        <p class="mt-8 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
+          From Pokémon on a handheld to getting lost in something on the big screen. These days I mostly play on Switch 2 and PS5, with a collection that stretches back to the Game Boy.
+        </p>
+        <p class="mt-6 text-[0.9375rem]">
+          <a href={BACKLOGGD_URL} {...newTab} class={linkClass}>
+            Find me on Backloggd <span aria-hidden="true">↗</span><span class="sr-only">{' (opens in a new tab)'}</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <HomeSection id="currently-playing" title="Currently playing">
+    <ul class="grid gap-10 sm:grid-cols-2 sm:gap-8">
+      {
+        currentlyPlaying.map((game) => (
+          <li class="grid grid-cols-[8rem_minmax(0,1fr)] items-end gap-5 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] sm:gap-6">
+            <GameCover artwork={game.artwork} label={`${game.title} — cover`} sizes="10rem" />
+            <div class="pb-1">
+              <h3 class="text-xl leading-snug sm:text-[1.375rem]">
+                {game.url ? (
+                  <a href={game.url} {...newTab} class={linkClass}>
+                    {game.title}
+                    <span class="sr-only">{' (opens in a new tab)'}</span>
+                  </a>
+                ) : (
+                  game.title
+                )}
+              </h3>
+              {game.playingOn && <p class="mt-2 text-[0.9375rem] text-muted">Playing on {game.playingOn}</p>}
+              {game.note && <p class="mt-3 leading-relaxed">{game.note}</p>}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
+  <HomeSection id="from-my-collection" title="From my collection">
+    <ul class="grid grid-cols-2 gap-x-4 gap-y-8 min-[30rem]:grid-cols-3 sm:gap-x-5 lg:grid-cols-6">
+      {
+        collection.map((game) => (
+          <li>
+            <GameCover
+              artwork={game.artwork}
+              label={game.title}
+              sizes="(min-width: 64rem) 8rem, (min-width: 30rem) 30vw, 45vw"
+            />
+            <h3 class="mt-3 text-[0.9375rem] leading-snug">
+              {game.url ? (
+                <a href={game.url} {...newTab} class={linkClass}>
+                  {game.title}
+                  <span class="sr-only">{' (opens in a new tab)'}</span>
+                </a>
+              ) : (
+                game.title
+              )}
+              {game.year && <span class="text-muted">{` (${game.year})`}</span>}
+            </h3>
+            {game.platform && <p class="mt-1 text-xs text-muted">{game.platform}</p>}
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
+  <HomeSection id="the-consoles" title="The consoles">
+    <div class="grid gap-x-10 gap-y-10 sm:grid-cols-3">
+      {
+        consoleFamilies.map((family) => (
+          <div>
+            <h3 class="text-xs text-muted">{family.name}</h3>
+            <ul class="mt-3 space-y-2">
+              {family.consoles.map((item) => (
+                <li class="flex flex-wrap items-baseline gap-x-2">
+                  <span class={item.current ? 'text-accent' : undefined}>{item.name}</span>
+                  {item.current && <span class="text-xs text-muted">Currently using</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </HomeSection>
+</PageLayout>

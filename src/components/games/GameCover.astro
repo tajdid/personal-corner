@@ -1,0 +1,39 @@
+---
+/**
+ * Game box art inside a consistent portrait area. Covers are contained (never
+ * cropped) and sit on a shared baseline, so square Game Boy boxes and tall
+ * modern boxes line up. Missing artwork uses the shared placeholder.
+ */
+import { Image } from 'astro:assets';
+import ImagePlaceholder from '../ImagePlaceholder.astro';
+import type { Artwork } from '../../data/games';
+
+interface Props {
+  artwork?: Artwork;
+  label: string;
+  sizes: string;
+  /** Tailwind aspect class for the artwork area. */
+  aspect?: string;
+}
+
+const { artwork, label, sizes, aspect = 'aspect-[3/4]' } = Astro.props;
+---
+
+<div class:list={['flex items-end', aspect]}>
+  {
+    artwork ? (
+      <Image
+        src={artwork.src}
+        alt=""
+        widths={[160, 240, 360, 480]}
+        width={Math.min(480, artwork.src.width)}
+        sizes={sizes}
+        class="h-auto max-h-full w-auto max-w-full rounded-sm border border-rule"
+      />
+    ) : (
+      <div aria-hidden="true" class="size-full">
+        <ImagePlaceholder label={label} class="size-full" />
+      </div>
+    )
+  }
+</div>

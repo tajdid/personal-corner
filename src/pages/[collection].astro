@@ -7,7 +7,7 @@ import { collections } from '../data/home';
 export const getStaticPaths = (() => {
   // Collections with a dedicated page in src/pages are skipped to avoid a route clash.
   // (Defined here: getStaticPaths can't read other frontmatter variables.)
-  const dedicatedPages = new Set(['music', 'books', 'films']);
+  const dedicatedPages = new Set(['music', 'books', 'films', 'games']);
   return collections
     .filter(({ slug }) => !dedicatedPages.has(slug))
     .map(({ slug, label }) => ({ params: { collection: slug }, props: { label } }));
