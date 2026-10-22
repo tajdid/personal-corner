@@ -1,33 +1,74 @@
 ---
 layout: '../../../layouts/CaseStudyLayout.astro'
 title: 'Designing transparent FX withdrawals'
-summary: 'Short description to come.'
+summary: 'Helping Stake investors withdraw to international bank accounts, with exchange rates, fees and receive amounts made easier to understand.'
 type: 'case-study'
 order: 3
+role: 'Senior product designer'
 disciplines:
-  - 'Disciplines to confirm'
-placeholder: true
+  - 'FX'
+  - 'Withdrawals'
+  - 'AI-assisted workflow'
+scope: 'International withdrawal flow'
+cover: './images/fx-withdraw-and-confirmation.jpg'
+coverAlt: 'Two Stake withdrawal screens: entering AED 1,000 to withdraw to a Bank of America account, and a confirmation that the withdrawal request has been received.'
+placeholder: false
 ---
 
 import Section from '../../../components/project/Section.astro';
-import Placeholder from '../../../components/project/Placeholder.astro';
+import ImagePair from '../../../components/project/ImagePair.astro';
+import notes from './images/fx-notes-to-requirements.jpg';
+import prototypes from './images/fx-early-prototypes.jpg';
+import annotated from './images/fx-annotated-early-screens.jpg';
+import refined from './images/fx-refined-withdrawal-flow.jpg';
 
 <Section title="Context">
-<Placeholder />
 
-A short paragraph on the problem and where the project started will go here once the write-up is ready.
+I worked on Stake’s multi-currency withdrawal experience, helping investors move funds into international bank accounts.
+
+International withdrawals introduced complexity that the domestic flow never had to handle: two currencies, changing exchange rates, fees, expiry states and market availability. The challenge was exposing enough financial detail to build trust without turning a simple withdrawal into a trading interface.
+
 </Section>
 
 <Section title="Approach">
-<Placeholder />
 
-A short paragraph on how the work was approached will go here once the write-up is ready.
+### From PM conversation to prototype in hours
 
-A short paragraph on the key decisions along the way will go here once the write-up is ready.
+Before a PRD existed, I used an early conversation with the PM to start shaping the experience. Granola captured the discussion, then my Product & Design Copilot GPT turned those notes into structured design requirements I could prototype from straight away.
+
+Using that requirements document as context, I explored the withdrawal flow across Magic Patterns, Figma Make and Claude. Within hours I had working concepts to review with the PM, before the formal PRD had been written. This:
+
+- made the proposed flow tangible much earlier
+- surfaced questions before requirements were locked
+- helped Product and Design align on interaction logic
+- accelerated the move from discussion to product definition
+
+### Designing the withdrawal flow for trust
+
+Once we aligned on the direction, I refined the experience around the moments where users needed the most certainty: the exchange rate, the fees, the amount they would receive and the transfer timing.
+
 </Section>
 
-<Section title="Outcome">
-<Placeholder />
+<ImagePair
+  first={{ src: notes, alt: 'Meeting notes from the PM conversation being turned into structured requirements for the FX withdrawal flow.' }}
+  second={{ src: prototypes, alt: 'An AI prompt describing the withdrawal screen, alongside early prototype screens generated from it.' }}
+  aspect="aspect-[20/27]"
+  caption="Turning conversation notes into structured requirements, then into early prototypes."
+/>
 
-A short paragraph on where the project ended up will go here once the write-up is ready.
+<ImagePair
+  first={{ src: annotated, alt: 'Early withdrawal screens surrounded by sticky notes.' }}
+  second={{ src: refined, alt: 'The refined withdrawal flow: entering an amount, reviewing what will be received and confirming the withdrawal.' }}
+  aspect="aspect-[20/27]"
+  caption="Annotated early screens, and the refined withdrawal flow."
+/>
+
+<Section title="Outcome">
+
+The international withdrawal experience launched with EUR, GBP and SAR, with the flow designed to support additional currencies over time. It was one of my final projects at Stake.
+
+- **Earlier alignment:** prototypes gave Product and Design something tangible to align on before requirements were final.
+- **Clearer decisions:** rates, fees and market edge cases surfaced earlier.
+- **Transparent experience:** users could see what they were sending, what they would receive and when it would arrive.
+
 </Section>

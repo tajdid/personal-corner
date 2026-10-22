@@ -15,17 +15,21 @@ interface Props {
 }
 
 const { frontmatter, detailedMeta = true, label } = Astro.props;
-const { title, name, summary, disciplines, year, scope, collaborators, liveUrl, sourceUrl } = frontmatter;
+const { title, name, summary, role, duration, disciplines, year, scope, collaborators, liveUrl, sourceUrl } =
+  frontmatter;
 
+// Order: Role, Duration, Disciplines, Scope (then Year and Collaborators if set).
 const meta = [
-  { label: 'Disciplines', value: disciplines?.join(', ') },
-  { label: 'Year', value: year?.toString() },
   ...(detailedMeta
     ? [
-        { label: 'Scope', value: scope },
-        { label: 'Collaborators', value: collaborators?.join(', ') },
+        { label: 'Role', value: role },
+        { label: 'Duration', value: duration },
       ]
     : []),
+  { label: 'Disciplines', value: disciplines?.join(', ') },
+  ...(detailedMeta ? [{ label: 'Scope', value: scope }] : []),
+  { label: 'Year', value: year?.toString() },
+  ...(detailedMeta ? [{ label: 'Collaborators', value: collaborators?.join(', ') }] : []),
 ].filter((item): item is { label: string; value: string } => Boolean(item.value));
 
 const links = [
@@ -55,7 +59,7 @@ const linkClass = 'text-accent hover:underline hover:underline-offset-4';
 
   {
     meta.length > 0 && (
-      <dl class="mt-10 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule pt-5 sm:grid-cols-4">
+      <dl class="mt-10 grid gap-x-8 gap-y-5 border-t border-rule pt-5 min-[30rem]:grid-cols-2 lg:grid-cols-4">
         {meta.map(({ label, value }) => (
           <div>
             <dt class="text-xs text-muted">{label}</dt>

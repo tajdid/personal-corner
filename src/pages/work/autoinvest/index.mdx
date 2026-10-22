@@ -1,23 +1,138 @@
 ---
 layout: '../../../layouts/CaseStudyLayout.astro'
-title: 'AutoInvest'
-summary: 'Short project description to come.'
+title: 'Designing automated property investing'
+name: 'AutoInvest'
+summary: 'Automated monthly plans that help Stake investors invest consistently, based on their goals and preferred strategy.'
 type: 'case-study'
 order: 99
+role: 'Product designer'
 disciplines:
-  - 'Disciplines to confirm'
+  - 'Growth'
+  - 'Recurring investments'
+scope: 'Recurring investment setup and plan management'
+cover: './images/autoinvest-active-plan-and-confirmation.jpg'
+coverAlt: 'Two AutoInvest screens: an active AED 2,000 monthly plan with settings and pause controls, and a confirmation that the plan has started.'
 homepageOrder: 2
 listed: false
-placeholder: true
+placeholder: false
 ---
 
 {/* Linked from the homepage. Category (case study or side project) still to confirm, so not listed on Work yet. */}
 
 import Section from '../../../components/project/Section.astro';
-import Placeholder from '../../../components/project/Placeholder.astro';
+import Figure from '../../../components/project/Figure.astro';
+import conceptTesting from './images/autoinvest-concept-testing.jpg';
+import monthlyAmount from './images/autoinvest-monthly-amount.jpg';
+import themes from './images/autoinvest-strategies-and-themes.jpg';
+import review from './images/autoinvest-review-and-confirm.jpg';
+import planStates from './images/autoinvest-plan-states.jpg';
 
-<Section title="Write-up">
-<Placeholder />
+<Section title="Context">
 
-The full write-up is coming later.
+AutoInvest set out to help Stake investors invest consistently through automated monthly plans, based on their goals and preferred strategy. The aim was to make the commitment clear while keeping investors in control.
+
+Initial interviews pointed to four problems:
+
+- **Forgetting to invest regularly:** remembering to invest created repeated effort.
+- **Lack of market knowledge:** researching individual properties could feel overwhelming.
+- **Missed opportunities:** investors could miss properties when they didn’t act quickly.
+- **Diversification challenges:** building a balanced portfolio required ongoing decisions.
+
+The users I spoke to weren’t sure what to invest in, felt frustrated by missed opportunities, wanted to “set it and forget it” and needed more confidence as international investors.
+
+I was the product designer in Stake’s Extend squad, a cross-functional team focused on new features, market expansion and taking ideas from discovery to delivery, working alongside a product manager, two front-end engineers and a back-end engineer.
+
+</Section>
+
+<Section title="Approach">
+
+### Testing our first ideas
+
+I used rough wireframes and early Figma prototypes to test whether users understood the concept, trusted the automation and could choose a strategy that matched their intent. One concept offered pre-built strategies alongside custom criteria. Custom criteria proved confusing, particularly for international investors, so we left them out of the first release and focused on pre-built strategies.
+
+### Prioritising what matters most
+
+We balanced user needs, technical scope and long-term product goals in a phased plan. The MVP covered automatic investment with pre-built strategies, managing AutoInvest, historical transactions, and editing, pausing or resuming a plan. Automatic deposits, automatic dividend reinvestment and customisable criteria were planned for a later version, with portfolio goals after that.
+
+### Clarity before commitment
+
+Setup asks for a monthly amount, a theme, a payment method, a start date and a monthly repeat date. Amount presets help people start, a separate calculator explains potential long-term value, and no deposit is taken until the setup is confirmed.
+
+AutoInvest needed to work for different investor mindsets: people who wanted diversification, people chasing growth, people focused on income and people who wanted more control. Themes turned a complex investment decision into a simple choice:
+
+- **Diversified:** balanced exposure across opportunities.
+- **Growth-focused:** aimed at higher upside.
+- **Income-focused:** prioritising recurring returns.
+
+Scheduled deposits move money into the wallet on the chosen recurring date, and automatic investment then uses wallet funds according to the plan’s rules. Keeping the two separate helps investors understand when funds are deposited and when they are invested.
+
+### Keeping investors in control
+
+Before activation, a review screen lets people check every setting and still edit it before they confirm. After setup, the plan shows a clear next deposit date and the current period, and can be paused and resumed. If the wallet balance is too low, investors are prompted to top up before resuming.
+
+### Simplifying without removing control
+
+Usability testing surfaced two issues. Participants struggled to understand the differences between themes, and they questioned how much would be decided for them and what they could change later.
+
+<blockquote>
+  <p>“I’m not sure what the difference is between Balanced and Diversified.”</p>
+  <footer>Investor in the UAE, usability testing</footer>
+</blockquote>
+
+<blockquote>
+  <p>“Can I still manually invest? What’s automatic, I don’t want to lose control.”</p>
+  <footer>Investor in the UK, usability testing</footer>
+</blockquote>
+
+I simplified the language and used clearer descriptions focused on real-world outcomes, so each theme was easier to understand. I also made it clear which decisions AutoInvest handles automatically and which settings investors control, with options to pause, resume and edit at any time.
+
+</Section>
+
+<Figure
+  src={conceptTesting}
+  alt="Rough wireframes from concept testing, with a table: pre-built strategies alongside custom criteria were tested; custom criteria were confusing, particularly for international investors; custom criteria were excluded from the first release."
+  aspect="aspect-[2400/975]"
+  caption="Concept testing with rough wireframes, and the decision it informed."
+/>
+
+<Figure
+  src={monthlyAmount}
+  alt="Choosing a monthly amount of AED 2,000 with presets, next to a calculator showing projected portfolio value and monthly income."
+  aspect="aspect-[2400/1095]"
+  caption="Choosing a monthly amount. The separate calculator is illustrative and not an indicator of future performance."
+/>
+
+<Figure
+  src={themes}
+  alt="Earlier screens for choosing an investment strategy and setting custom criteria, alongside later screens for choosing a Diversified, Growth-focused or Income-focused theme."
+  aspect="aspect-[16/9]"
+  caption="Earlier strategy and custom-criteria screens, alongside the theme selection that replaced them."
+/>
+
+<Figure
+  src={review}
+  alt="A review screen listing the amount, theme, payment method, start date and repeat date, and a payment confirmation sheet for AED 2,000."
+  aspect="aspect-[1880/1600]"
+  caption="Reviewing the plan before confirming the first payment."
+/>
+
+<Figure
+  src={planStates}
+  alt="Four plan states: an active scheduled deposit, resuming a plan, a paused plan and an insufficient-funds prompt to top up."
+  aspect="aspect-[2400/975]"
+  caption="Plan states after setup: scheduled deposit, resuming, paused and insufficient funds."
+/>
+
+<Section title="Outcome">
+
+AutoInvest created a new behaviour inside Stake: users could commit to a monthly strategy and keep investing without manually choosing every opportunity. Dashboards gave teams visibility of adoption.
+
+As of May 2026:
+
+- **2,968** lifetime subscribers
+- **678** active subscribers
+- **AED 929,887** (about AED 930K) monthly recurring GMV
+- **AED 14.35m** total auto-invested volume
+- **32,890** AutoInvest investments
+
 </Section>

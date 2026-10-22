@@ -1,33 +1,79 @@
 ---
 layout: '../../../layouts/CaseStudyLayout.astro'
 title: 'Leading the vision for an AI-native design system'
-summary: 'Short description to come.'
+summary: 'A self-initiated vision for an AI-ready design system at Stake, aimed at consistency, closer design–engineering collaboration and faster product development.'
 type: 'case-study'
 order: 2
+role: 'Senior product designer'
 disciplines:
-  - 'Disciplines to confirm'
-placeholder: true
+  - 'Design systems'
+  - 'AI'
+  - 'DesignOps'
+scope: 'Design-system vision and proposal'
+cover: './images/ds-code-and-components.jpg'
+coverAlt: 'Design-system components in light and dark modes, shown alongside the code that styles them.'
+placeholder: false
 ---
 
 import Section from '../../../components/project/Section.astro';
-import Placeholder from '../../../components/project/Placeholder.astro';
+import Figure from '../../../components/project/Figure.astro';
+import boards from './images/ds-strategy-and-audit-boards.jpg';
+import diagram from './images/ds-ai-native-system-diagram.jpg';
 
 <Section title="Context">
-<Placeholder />
 
-A short paragraph on the problem and where the project started will go here once the write-up is ready.
+As more squads contributed to the product, maintaining consistency became increasingly difficult. Components had evolved organically, documentation was fragmented, and emerging AI-assisted workflows highlighted new challenges that traditional design systems weren’t built to support.
+
+Rather than waiting for a formal initiative, I explored how our design system could become the foundation for faster, more scalable product development, both for people and for AI.
+
 </Section>
 
 <Section title="Approach">
-<Placeholder />
 
-A short paragraph on how the work was approached will go here once the write-up is ready.
+### Taking the initiative
 
-A short paragraph on the key decisions along the way will go here once the write-up is ready.
+This wasn’t part of my roadmap or day-to-day responsibilities. I identified the opportunity, developed the proposal independently and presented it to the wider Product & Technology organisation to build alignment around a longer-term vision. The work covered:
+
+- auditing the existing Stake design system
+- identifying scalability challenges
+- defining an AI-ready design system vision
+- exploring variables, tokens and component architecture
+- creating AI-readable documentation conventions
+- presenting the proposal to Product & Tech to gain buy-in
+
+### What an AI-ready system looks like
+
+Rather than treating the design system as a collection of reusable components, I proposed treating it as a shared source of truth that designers, engineers and AI tools could all understand:
+
+- **Structured:** consistent naming conventions and information architecture.
+- **Token-first:** variables and design tokens as the foundation.
+- **Documented:** documentation written for both humans and AI.
+- **Composable:** reusable components with predictable behaviour.
+- **Connected:** a shared language across design, engineering and product.
+
 </Section>
 
-<Section title="Outcome">
-<Placeholder />
+<Figure
+  src={boards}
+  alt="Two boards of sticky notes: a strategy board with business goals, user goals and a hero statement, and an audit board covering the current design system, key challenges and issues."
+  aspect="aspect-[30/22]"
+  caption="Strategy and audit boards from the exploration."
+/>
 
-A short paragraph on where the project ended up will go here once the write-up is ready.
+<Figure
+  src={diagram}
+  alt="Diagram titled AI-Native Design System: design and engineering connect through workflows, documentation, components, variables and tokens, with AI connected to tokens."
+  aspect="aspect-[2400/1385]"
+  caption="How design, engineering and AI connect through a shared system."
+/>
+
+<Section title="Outcome">
+
+Although this began as a self-initiated exploration, it sparked wider conversations across Product & Technology about how our design system could evolve for AI-assisted product development.
+
+- **Vision established:** a long-term vision for the evolution of the design system.
+- **Alignment built:** presenting the vision to Product & Technology built shared understanding and buy-in.
+- **Conversation shifted:** the discussion moved beyond UI components towards documentation, governance and scalability.
+- **Foundations laid:** patterns around tokens, naming and documentation for future AI-assisted workflows.
+
 </Section>

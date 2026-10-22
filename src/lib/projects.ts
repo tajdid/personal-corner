@@ -17,6 +17,10 @@ export interface ProjectFrontmatter {
   order: number;
   /** Short name shown above the case-study title and on homepage rows. */
   name?: string;
+  /** My documented responsibility on the project, e.g. "Lead product designer". */
+  role?: string;
+  /** Explicit project timeframe from the source, e.g. "4 weeks". Omit if unknown. */
+  duration?: string;
   disciplines?: string[];
   year?: number;
   scope?: string;
@@ -76,6 +80,12 @@ function toProject(path: string, frontmatter: ProjectFrontmatter): Project {
   }
   if (typeof frontmatter.order !== 'number') {
     throw new Error(`${path}: frontmatter "order" must be a number.`);
+  }
+  for (const field of ['role', 'duration', 'scope'] as const) {
+    const value = frontmatter[field];
+    if (value !== undefined && (typeof value !== 'string' || !value.trim())) {
+      throw new Error(`${path}: frontmatter "${field}" must be a non-empty string when set.`);
+    }
   }
 
   const coverSrc = frontmatter.cover ? resolveProjectImage(slug, frontmatter.cover) : undefined;

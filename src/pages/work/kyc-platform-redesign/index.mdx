@@ -1,33 +1,74 @@
 ---
 layout: '../../../layouts/CaseStudyLayout.astro'
 title: 'Redesigning a complex KYC platform in four weeks'
-summary: 'Short description to come.'
+name: 'Synechron · Altares'
+summary: 'A four-week redesign of indueD, a due-diligence platform used by compliance teams, simplifying a complex interface and setting a clearer direction.'
 type: 'case-study'
 order: 4
+role: 'Lead product designer'
+duration: '4 weeks'
 disciplines:
-  - 'Disciplines to confirm'
-placeholder: true
+  - 'Enterprise SaaS'
+  - 'KYC & compliance'
+scope: 'End-to-end redesign concept'
+cover: './images/kyc-redesigned-screens.jpg'
+coverAlt: 'Redesigned indueD screens, including a sign-in page, a welcome dashboard with a portfolio chart and world map, and a company detail view.'
+placeholder: false
 ---
 
 import Section from '../../../components/project/Section.astro';
-import Placeholder from '../../../components/project/Placeholder.astro';
+import Figure from '../../../components/project/Figure.astro';
+import ImagePair from '../../../components/project/ImagePair.astro';
+import research from './images/kyc-existing-product-and-research.jpg';
+import flows from './images/kyc-redesigned-flows.jpg';
+import dashboard from './images/kyc-dashboard.jpg';
 
 <Section title="Context">
-<Placeholder />
 
-A short paragraph on the problem and where the project started will go here once the write-up is ready.
+Altares wanted to modernise indueD, a due-diligence platform used by compliance teams. I helped rethink the end-to-end experience, simplifying a complex interface and creating a clearer foundation for future development.
+
+The platform had been built primarily around functionality, resulting in a dense interface, inconsistent patterns and limited understanding of what users actually needed. The redesign had to fit a four-week timeframe.
+
 </Section>
 
 <Section title="Approach">
-<Placeholder />
 
-A short paragraph on how the work was approached will go here once the write-up is ready.
+### Research and synthesis
 
-A short paragraph on the key decisions along the way will go here once the write-up is ready.
+I interviewed five users, audited the existing experience and carried out heuristic and competitor analysis. From there I mapped pain points and user needs, prioritised the highest-value opportunities and defined the journeys we needed to redesign.
+
+### Simplifying without losing depth
+
+Working within the four-week timeframe, I translated the research into a new information architecture, a new visual language and a set of high-fidelity product experiences. What changed:
+
+- simplified portfolio management
+- introduced global search
+- improved filtering and information hierarchy
+- reduced unnecessary interface complexity
+- more consistent interaction and visual patterns
+
 </Section>
+
+<ImagePair
+  first={{ src: research, alt: 'The existing indueD dashboard with sticky-note annotations, above a research synthesis board of grouped sticky notes.' }}
+  second={{ src: flows, alt: 'Three redesigned indueD screens: a portfolio table, a welcome dashboard with a world map, and a filtered list.' }}
+  aspect="aspect-[28/47]"
+  caption="The existing product and research synthesis, and redesigned screens."
+/>
 
 <Section title="Outcome">
-<Placeholder />
 
-A short paragraph on where the project ended up will go here once the write-up is ready.
+In four weeks, we moved from an ageing, developer-led interface to a redesigned end-to-end concept that gave Altares a clearer direction for future product iterations.
+
+- **More intuitive:** users found the simplified experience easier to understand and navigate.
+- **More modern:** testing showed a strong preference for the new visual direction.
+- **Built to evolve:** the redesign established a foundation for subsequent product development.
+
 </Section>
+
+<Figure
+  src={dashboard}
+  alt="The redesigned indueD welcome dashboard on a laptop, with search, a portfolio chart and a map of companies by country."
+  aspect="aspect-[4/3]"
+  caption="The redesigned indueD dashboard."
+/>
