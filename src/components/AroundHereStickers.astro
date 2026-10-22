@@ -1,8 +1,7 @@
 ---
 /**
- * Decorative hover stickers and a gentle magnetic title for "Around here" links
- * (CollectionLink or LinkRow with `sticker`). Include once per page.
- * Elements marked data-magnet inside a link move; the link itself never does. Progressive enhancement:
+ * Decorative hover stickers for "Around here" links (CollectionLink or LinkRow
+ * with `sticker`). Include once per page. Progressive enhancement:
  * only active with a fine pointer that can hover and without reduced motion;
  * otherwise the overlay stays hidden and the links behave normally.
  */
@@ -87,20 +86,9 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
   .sticker-overlay.is-visible .sticker.is-active {
     scale: 1;
   }
-
-  /* While tracking, the rAF loop drives the transform; on release it eases home. */
-  :global([data-magnet]) {
-    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global([data-magnet].is-tracking) {
-    transition: none;
-  }
 </style>
 
 <script>
-  const MAGNET_X = 5; // px, maximum pull
-  const MAGNET_Y = 3;
   const EASE = 0.2;
   const EDGE = 12; // px kept clear of the viewport edges
   const OFFSET_X = 18;
@@ -125,14 +113,10 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
 
     let activeImg: HTMLImageElement | null = null;
     let activeLink: HTMLAnchorElement | null = null;
-    let magnets: HTMLElement[] = [];
-    let linkRect: DOMRect | null = null;
     let frame = 0;
     let visible = false;
     const target = { x: 0, y: 0 };
     const pos = { x: 0, y: 0 };
-    const pull = { x: 0, y: 0 };
-    const pullTarget = { x: 0, y: 0 };
 
     const isReady = (img: HTMLImageElement | null) =>
       Boolean(img && img.complete && img.naturalWidth > 0);
@@ -153,45 +137,19 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
       target.y = Math.min(Math.max(y, EDGE), vh - h - EDGE);
     }
 
-    function updatePull(clientX: number, clientY: number) {
-      if (!activeLink) return;
-      linkRect ??= activeLink.getBoundingClientRect(); // measured once per hover or scroll
-      const dx = (clientX - (linkRect.left + linkRect.width / 2)) / (linkRect.width / 2);
-      const dy = (clientY - (linkRect.top + linkRect.height / 2)) / (linkRect.height / 2);
-      pullTarget.x = Math.max(-1, Math.min(1, dx)) * MAGNET_X;
-      pullTarget.y = Math.max(-1, Math.min(1, dy)) * MAGNET_Y;
-    }
-
     function tick() {
       frame = 0;
       pos.x += (target.x - pos.x) * EASE;
       pos.y += (target.y - pos.y) * EASE;
-      pull.x += (pullTarget.x - pull.x) * EASE;
-      pull.y += (pullTarget.y - pull.y) * EASE;
       overlay!.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
-      const shift = `translate3d(${pull.x.toFixed(2)}px, ${pull.y.toFixed(2)}px, 0)`;
-      for (const el of magnets) el.style.transform = shift;
 
-      const settled =
-        Math.abs(target.x - pos.x) < 0.1 &&
-        Math.abs(target.y - pos.y) < 0.1 &&
-        Math.abs(pullTarget.x - pull.x) < 0.05 &&
-        Math.abs(pullTarget.y - pull.y) < 0.05;
+      const settled = Math.abs(target.x - pos.x) < 0.1 && Math.abs(target.y - pos.y) < 0.1;
       if (!settled) frame = requestAnimationFrame(tick); // stops itself once idle
     }
 
     const kick = () => {
       if (!frame) frame = requestAnimationFrame(tick);
     };
-
-    function releaseMagnet() {
-      for (const el of magnets) {
-        el.classList.remove('is-tracking');
-        el.style.transform = ''; // CSS transition eases it home
-      }
-      magnets = [];
-      pull.x = pull.y = pullTarget.x = pullTarget.y = 0;
-    }
 
     function show(img: HTMLImageElement) {
       if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
@@ -215,17 +173,12 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     function onEnter(event: PointerEvent) {
       if (!enabled() || event.pointerType !== 'mouse') return;
       const link = event.currentTarget as HTMLAnchorElement;
-      if (magnets.length && activeLink !== link) releaseMagnet();
       activeLink = link;
-      linkRect = null;
-      magnets = [...link.querySelectorAll<HTMLElement>('[data-magnet]')];
-      magnets.forEach((el) => el.classList.add('is-tracking'));
 
       const img = images.get(link.dataset.stickerLink ?? '') ?? null;
       if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
       activeImg = img;
       place(event.clientX, event.clientY);
-      updatePull(event.clientX, event.clientY);
       // A missing or failed illustration just leaves the normal link.
       if (img && isReady(img)) show(img);
       else hide();
@@ -235,7 +188,6 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     function onMove(event: PointerEvent) {
       if (!activeLink || event.currentTarget !== activeLink) return;
       place(event.clientX, event.clientY);
-      updatePull(event.clientX, event.clientY);
       if (activeImg && !visible && isReady(activeImg)) show(activeImg);
       kick();
     }
@@ -243,8 +195,6 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
     function onLeave(event: PointerEvent) {
       if (event.currentTarget !== activeLink) return;
       activeLink = null;
-      linkRect = null;
-      releaseMagnet();
       hide();
     }
 
@@ -252,7 +202,6 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       activeLink = null;
-      releaseMagnet();
       hide();
     }
 
@@ -269,7 +218,6 @@ const sized = Object.entries(stickers).map(([slug, src], index) => {
       link.addEventListener('pointermove', onMove, { signal });
       link.addEventListener('pointerleave', onLeave, { signal });
     });
-    window.addEventListener('scroll', () => (linkRect = null), { passive: true, signal });
     canHover.addEventListener('change', applyMode, { signal });
     reduceMotion.addEventListener('change', applyMode, { signal });
     applyMode();

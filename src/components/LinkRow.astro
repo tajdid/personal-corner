@@ -48,21 +48,14 @@ const grid = 'sm:grid-cols-[9rem_minmax(0,1fr)_auto]';
           grid,
         ]}
       >
-        <span
-          class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]"
-          data-magnet={sticker ? '' : undefined}
-        >
+        <span class="text-xl text-accent underline-offset-4 group-hover:underline sm:text-[1.375rem]">
           {label}
           {external && <span class="sr-only">(opens in a new tab)</span>}
         </span>
         <span class="col-start-1 text-[0.9375rem] text-muted sm:col-start-2 sm:row-start-1">
           {description}
         </span>
-        <span
-          aria-hidden="true"
-          class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3"
-          data-magnet={sticker ? '' : undefined}
-        >
+        <span aria-hidden="true" class="col-start-2 row-start-1 text-xl text-accent sm:col-start-3">
           {arrow}
         </span>
       </a>
