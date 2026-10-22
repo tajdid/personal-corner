@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "sync:films": "node scripts/sync-films.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.4",
