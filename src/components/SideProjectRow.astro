@@ -7,10 +7,11 @@ import ProjectMedia from './ProjectMedia.astro';
 import ImagePlaceholder from './ImagePlaceholder.astro';
 import type { Project } from '../lib/projects';
 
-type Props = Pick<Project, 'href' | 'title' | 'summary' | 'year' | 'image'>;
+type Props = Pick<Project, 'href' | 'title' | 'summary' | 'year' | 'image' | 'placeholder'>;
 
-const { href, title, summary, year, image } = Astro.props;
+const { href, title, summary, year, image, placeholder } = Astro.props;
 const meta = year ? String(year) : '';
+const label = placeholder ? 'Sample project' : undefined;
 ---
 
 <li class="group relative grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 border-b border-rule py-5 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:gap-x-6">
@@ -24,6 +25,7 @@ const meta = year ? String(year) : '';
     }
   </div>
   <div class="self-center">
+    {label && <p class="mb-1 text-xs text-muted">{label}</p>}
     <h3 class="text-lg leading-snug">
       <a href={href} class="stretched-link text-accent underline-offset-4 group-hover:underline">
         {title}

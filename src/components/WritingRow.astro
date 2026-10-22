@@ -9,7 +9,7 @@ type Props = Pick<Article, 'href' | 'title' | 'summary' | 'category' | 'publishe
 const { href, title, summary, category, publishedAt, placeholder, headingLevel = 'h3' } = Astro.props;
 const Heading = headingLevel;
 // Undated placeholders are labelled rather than given an invented date.
-const dateLabel = publishedAt ? undefined : placeholder ? 'Sample entry' : undefined;
+const dateLabel = publishedAt ? undefined : placeholder ? 'Sample article' : undefined;
 const hasMeta = Boolean(publishedAt || dateLabel || category);
 ---
 

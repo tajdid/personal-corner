@@ -25,7 +25,11 @@ const grid = 'md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12';
 <PageLayout title={`${frontmatter.title} — Tajdid Rahman`} description={frontmatter.summary}>
   <div class={container}>
     <div class:list={['pt-10 pb-12 sm:pt-14 sm:pb-16', grid]}>
-      <ProjectHeader frontmatter={frontmatter} detailedMeta={false} />
+      <ProjectHeader
+        frontmatter={frontmatter}
+        detailedMeta={false}
+        label={frontmatter.placeholder ? 'Sample project' : undefined}
+      />
     </div>
     <div class:list={['pb-16 sm:pb-20', grid]}>
       <div class="md:col-start-2">

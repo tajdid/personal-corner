@@ -11,15 +11,15 @@ import { getArticles } from '../../lib/articles';
     >
       <div class="md:col-start-2">
         <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl">Writing</h1>
-        <p class="mt-8 text-xs text-muted">Placeholder introduction</p>
-        <p class="mt-2 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
-          A short introduction to the writing will go here: what I write about and how often.
+        <p class="mt-8 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
+          Notes on design, films, games and the things that catch my attention.
         </p>
       </div>
     </div>
 
     <section aria-label="Articles" class="pb-20 sm:pb-28 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12">
-      <div class="border-t border-rule pt-8 md:col-start-2">
+      <!-- Dividers between articles only: the last row drops its rule and bottom padding. -->
+      <div class="md:col-start-2 [&>article:last-child]:border-b-0 [&>article:last-child]:pb-0 [&>article]:py-7 [&>article:first-child]:pt-0">
         {getArticles().map((article) => <WritingRow {...article} headingLevel="h2" />)}
       </div>
     </section>

@@ -26,7 +26,8 @@ import { getCaseStudies, getSideProjects } from '../../lib/projects';
   </div>
 
   <HomeSection id="side-projects" title="Side projects">
-    <ul class="border-t border-rule">
+    <!-- Dividers between rows only: first row aligns with the section label, last row drops its rule. -->
+    <ul class="[&>li:first-child]:pt-0 [&>li:last-child]:border-b-0 [&>li:last-child]:pb-0">
       {getSideProjects().map((project) => <SideProjectRow {...project} />)}
     </ul>
   </HomeSection>

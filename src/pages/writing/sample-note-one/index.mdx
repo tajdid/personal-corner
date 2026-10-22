@@ -1,8 +1,8 @@
 ---
 layout: '../../../layouts/ArticleLayout.astro'
-title: 'Sample note one'
-summary: 'A one-line summary of the note will sit here.'
-category: 'Category'
+title: 'The small details that make interfaces feel considered'
+summary: 'A look at spacing, feedback and the quiet decisions that make a product easier to use.'
+category: 'Design'
 order: 1
 homepageOrder: 1
 placeholder: true
@@ -10,34 +10,33 @@ placeholder: true
 
 import ArticleFigure from '../../../components/writing/ArticleFigure.astro';
 
-<p class="text-xs text-muted">Placeholder copy · typography sample</p>
+Most people can't say why one product feels calm and another feels hurried. They rarely point to a single feature. What they notice is an overall impression, and that impression tends to come from dozens of small decisions that are easy to overlook when each one is considered alone.
 
-This sample shows how an article is styled. Everything on this page is placeholder text and will be replaced by the real note. Paragraphs sit in a comfortable reading column, with [inline links](/writing) in forest green.
+## Spacing does more work than it gets credit for
 
-## A second-level heading
+Space is usually the first thing to suffer when a screen gets busy. Another button arrives, a label grows, a banner needs room, and the gaps between things quietly shrink until everything feels equally important.
 
-Headings break the article into sections. Lists work as you'd expect:
+Generous, consistent spacing does the opposite. It groups related things together and separates the ones that aren't, so the structure of a page is readable before any words are. A heading that sits closer to its content than to the section above it tells you what it belongs to without a border or a box.
 
-- An unordered list item.
-- Another item, with a little more text so it wraps onto a second line on narrower screens.
-- A third item.
+Consistency matters as much as quantity. A small set of spacing values, used deliberately, gives a layout rhythm. When every gap is slightly different, the eye keeps searching for a pattern that isn't there.
 
-1. An ordered list item.
-2. A second step.
-3. A third step.
+<ArticleFigure placeholder="Two versions of the same screen, with and without consistent spacing" caption="Placeholder: an image comparing two spacing approaches." />
 
-### A third-level heading
+## Feedback is a conversation
 
-> A blockquote, used for quoting someone else. This sample doesn't quote anyone real.
+Every action in an interface asks a quiet question: *did that work?* Good feedback answers it at the right volume.
 
-<ArticleFigure placeholder="Sample note one — image" caption="A caption sits beneath the image." />
+Some answers should be almost invisible. A button that changes state the moment it's pressed, or a field that confirms a valid entry without fanfare, keeps people moving. Other answers need more weight, such as a destructive action, a payment or anything that can't be undone.
 
-Inline code looks like `npm run build`, and longer snippets sit in a code block:
+A few patterns tend to help:
 
-```ts
-// A code block keeps long lines inside its own scroll area.
-const greeting = 'Hello from a sample article';
-console.log(greeting);
-```
+1. Respond immediately, even if the real work takes longer. A pressed state or a progress hint is better than silence.
+2. Put the response where the attention already is, rather than in a distant corner of the screen.
+3. Match the tone to the stakes. Small actions get small acknowledgements; consequential ones get clarity.
+4. Make errors useful. Saying what went wrong and what to do next is kinder than a generic warning.
 
-That's the full set of styles available to an article.
+## The decisions nobody notices
+
+Many of the best details are only noticed when they're missing. A sensible default saves a choice. A form that remembers what was typed after an error saves a little frustration. A label that uses the same word as the button it describes removes a moment of doubt.
+
+None of these will appear in a list of features. Together, though, they decide whether a product feels considered or merely functional. The work is less about adding polish at the end and more about asking, at every step, what the person on the other side is trying to do, and quietly getting out of their way.

@@ -10,9 +10,11 @@ interface Props {
   frontmatter: ProjectFrontmatter;
   /** Case studies show the full metadata row; side projects keep it lighter. */
   detailedMeta?: boolean;
+  /** Small muted label above the title, e.g. "Sample project". */
+  label?: string;
 }
 
-const { frontmatter, detailedMeta = true } = Astro.props;
+const { frontmatter, detailedMeta = true, label } = Astro.props;
 const { title, name, summary, disciplines, year, scope, collaborators, liveUrl, sourceUrl } = frontmatter;
 
 const meta = [
@@ -38,11 +40,12 @@ const linkClass = 'text-accent hover:underline hover:underline-offset-4';
   <a href={routes.work} class:list={['text-sm', linkClass]}>
     <span aria-hidden="true">←</span> Back to Work
   </a>
-  {name && name !== title && <p class="mt-10 text-sm text-muted">{name}</p>}
+  {label && <p class="mt-10 text-xs text-muted">{label}</p>}
+  {name && name !== title && <p class:list={['text-sm text-muted', label ? 'mt-2' : 'mt-10']}>{name}</p>}
   <h1
     class:list={[
       'font-semibold tracking-tight',
-      name && name !== title ? 'mt-3' : 'mt-10',
+      label || (name && name !== title) ? 'mt-3' : 'mt-10',
       title.length > 30 ? 'text-4xl leading-tight sm:text-5xl' : 'text-5xl sm:text-6xl',
     ]}
   >

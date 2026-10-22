@@ -15,13 +15,16 @@ interface Props {
 }
 
 const { frontmatter, file } = Astro.props;
-const { title, summary, category } = frontmatter;
+const { title, summary, category, placeholder } = frontmatter;
 const slug = slugFromFile(file);
 const publishedAt = frontmatter.publishedAt
   ? frontmatter.publishedAt instanceof Date
     ? frontmatter.publishedAt
     : new Date(`${frontmatter.publishedAt}T00:00:00Z`)
   : undefined;
+
+// Undated placeholder articles are labelled rather than given an invented date.
+const sampleLabel = !publishedAt && placeholder ? 'Sample article' : undefined;
 
 const container = 'mx-auto max-w-[68rem] px-5 sm:px-8';
 const grid = 'md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12';
@@ -35,10 +38,10 @@ const grid = 'md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12';
           <span aria-hidden="true">←</span> Back to Writing
         </a>
         {
-          (publishedAt || category) && (
+          (publishedAt || sampleLabel || category) && (
             <p class="mt-10 text-xs text-muted">
-              {publishedAt && <time datetime={isoDate(publishedAt)}>{formatDate(publishedAt)}</time>}
-              {publishedAt && category && (
+              {publishedAt ? <time datetime={isoDate(publishedAt)}>{formatDate(publishedAt)}</time> : sampleLabel}
+              {(publishedAt || sampleLabel) && category && (
                 <>
                   <span aria-hidden="true" class="mx-1.5">·</span>
                   <span class="sr-only">,</span>
@@ -51,7 +54,7 @@ const grid = 'md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12';
         <h1
           class:list={[
             'max-w-[20ch] text-4xl leading-tight font-semibold tracking-tight sm:text-5xl',
-            publishedAt || category ? 'mt-3' : 'mt-10',
+            publishedAt || sampleLabel || category ? 'mt-3' : 'mt-10',
           ]}
         >
           {title}
