@@ -4,6 +4,7 @@ import HomeSection from '../components/HomeSection.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import WritingRow from '../components/WritingRow.astro';
 import CollectionLink from '../components/CollectionLink.astro';
+import AroundHereStickers from '../components/AroundHereStickers.astro';
 import LifeLatelyItem from '../components/LifeLatelyItem.astro';
 import { lifeLately, collections } from '../data/home';
 import { getHomepageArticles } from '../lib/articles';
@@ -75,7 +76,8 @@ const textLink =
   <HomeSection id="around-here" number="04" title="Around here">
     <p class="text-lg">A few shelves for the things I keep coming back to.</p>
     <div class="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2">
-      {collections.map((collection) => <CollectionLink {...collection} />)}
+      {collections.map((collection) => <CollectionLink {...collection} sticker />)}
     </div>
+    <AroundHereStickers />
   </HomeSection>
 </PageLayout>

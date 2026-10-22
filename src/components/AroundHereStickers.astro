@@ -1,0 +1,287 @@
+---
+/**
+ * Decorative hover stickers and a gentle magnetic title for the homepage
+ * "Around here" links (CollectionLink with `sticker`). Progressive enhancement:
+ * only active with a fine pointer that can hover and without reduced motion;
+ * otherwise the overlay stays hidden and the links behave normally.
+ */
+import { Image } from 'astro:assets';
+import music from '../assets/stickers/music.png';
+import books from '../assets/stickers/books.png';
+import films from '../assets/stickers/films.png';
+import games from '../assets/stickers/games.png';
+import travel from '../assets/stickers/travel.png';
+import bookmarks from '../assets/stickers/bookmarks.png';
+
+const MAX_SIDE = 150;
+const stickers = { music, books, films, games, travel, bookmarks };
+
+// Display size keeps each illustration's proportions within MAX_SIDE.
+const sized = Object.entries(stickers).map(([slug, src], index) => {
+  const scale = MAX_SIDE / Math.max(src.width, src.height);
+  return {
+    slug,
+    src,
+    width: Math.round(src.width * scale),
+    height: Math.round(src.height * scale),
+    // A small, fixed tilt per sticker; no continuous motion.
+    tilt: index % 2 === 0 ? -4 : 3,
+  };
+});
+---
+
+<div class="sticker-overlay" data-sticker-overlay aria-hidden="true" hidden>
+  {
+    sized.map(({ slug, src, width, height, tilt }) => (
+      <Image
+        src={src}
+        alt=""
+        width={width}
+        height={height}
+        densities={[1, 2]}
+        loading="lazy"
+        decoding="async"
+        class="sticker"
+        data-sticker={slug}
+        data-w={width}
+        data-h={height}
+        style={`rotate: ${tilt}deg`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .sticker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 160ms ease-out;
+    will-change: transform, opacity;
+  }
+
+  .sticker-overlay.is-visible {
+    opacity: 1;
+  }
+
+  .sticker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: none;
+    opacity: 0;
+    scale: 0.94;
+    transition: scale 200ms ease-out;
+    filter: drop-shadow(0 6px 10px rgb(23 26 23 / 0.15));
+  }
+
+  /* Only the active sticker shows; switching between links swaps it instantly. */
+  .sticker.is-active {
+    opacity: 1;
+  }
+
+  .sticker-overlay.is-visible .sticker.is-active {
+    scale: 1;
+  }
+
+  /* While tracking, the rAF loop drives the transform; on release it eases home. */
+  :global([data-magnet]) {
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :global([data-magnet].is-tracking) {
+    transition: none;
+  }
+</style>
+
+<script>
+  const MAGNET_X = 5; // px, maximum pull
+  const MAGNET_Y = 3;
+  const EASE = 0.2;
+  const EDGE = 12; // px kept clear of the viewport edges
+  const OFFSET_X = 18;
+  const OFFSET_Y = 22;
+
+  function setup(): () => void {
+    const overlay = document.querySelector<HTMLElement>('[data-sticker-overlay]');
+    const links = document.querySelectorAll<HTMLAnchorElement>('a[data-sticker-link]');
+    if (!overlay || links.length === 0) return () => {};
+
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const enabled = () => canHover.matches && !reduceMotion.matches;
+
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const images = new Map<string, HTMLImageElement>();
+    overlay.querySelectorAll<HTMLImageElement>('img[data-sticker]').forEach((img) => {
+      images.set(img.dataset.sticker ?? '', img);
+    });
+
+    let activeImg: HTMLImageElement | null = null;
+    let activeLink: HTMLAnchorElement | null = null;
+    let magnet: HTMLElement | null = null;
+    let linkRect: DOMRect | null = null;
+    let frame = 0;
+    let visible = false;
+    const target = { x: 0, y: 0 };
+    const pos = { x: 0, y: 0 };
+    const pull = { x: 0, y: 0 };
+    const pullTarget = { x: 0, y: 0 };
+
+    const isReady = (img: HTMLImageElement | null) =>
+      Boolean(img && img.complete && img.naturalWidth > 0);
+
+    // Place the sticker above and to the right of the pointer, flipping near edges,
+    // so it never sits over the hovered title line.
+    function place(clientX: number, clientY: number) {
+      if (!activeImg) return;
+      const w = Number(activeImg.dataset.w);
+      const h = Number(activeImg.dataset.h);
+      const vw = document.documentElement.clientWidth;
+      const vh = window.innerHeight;
+      let x = clientX + OFFSET_X;
+      if (x + w > vw - EDGE) x = clientX - OFFSET_X - w;
+      let y = clientY - OFFSET_Y - h;
+      if (y < EDGE) y = clientY + OFFSET_Y + 8;
+      target.x = Math.min(Math.max(x, EDGE), vw - w - EDGE);
+      target.y = Math.min(Math.max(y, EDGE), vh - h - EDGE);
+    }
+
+    function updatePull(clientX: number, clientY: number) {
+      if (!activeLink) return;
+      linkRect ??= activeLink.getBoundingClientRect(); // measured once per hover or scroll
+      const dx = (clientX - (linkRect.left + linkRect.width / 2)) / (linkRect.width / 2);
+      const dy = (clientY - (linkRect.top + linkRect.height / 2)) / (linkRect.height / 2);
+      pullTarget.x = Math.max(-1, Math.min(1, dx)) * MAGNET_X;
+      pullTarget.y = Math.max(-1, Math.min(1, dy)) * MAGNET_Y;
+    }
+
+    function tick() {
+      frame = 0;
+      pos.x += (target.x - pos.x) * EASE;
+      pos.y += (target.y - pos.y) * EASE;
+      pull.x += (pullTarget.x - pull.x) * EASE;
+      pull.y += (pullTarget.y - pull.y) * EASE;
+      overlay!.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
+      if (magnet) magnet.style.transform = `translate3d(${pull.x.toFixed(2)}px, ${pull.y.toFixed(2)}px, 0)`;
+
+      const settled =
+        Math.abs(target.x - pos.x) < 0.1 &&
+        Math.abs(target.y - pos.y) < 0.1 &&
+        Math.abs(pullTarget.x - pull.x) < 0.05 &&
+        Math.abs(pullTarget.y - pull.y) < 0.05;
+      if (!settled) frame = requestAnimationFrame(tick); // stops itself once idle
+    }
+
+    const kick = () => {
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+
+    function releaseMagnet() {
+      if (!magnet) return;
+      magnet.classList.remove('is-tracking');
+      magnet.style.transform = ''; // CSS transition eases it home
+      magnet = null;
+      pull.x = pull.y = pullTarget.x = pullTarget.y = 0;
+    }
+
+    function show(img: HTMLImageElement) {
+      if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
+      activeImg = img;
+      img.classList.add('is-active');
+      if (!visible) {
+        // Appear at the pointer rather than gliding in from the last position.
+        pos.x = target.x;
+        pos.y = target.y;
+        overlay!.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+        overlay!.classList.add('is-visible');
+        visible = true;
+      }
+    }
+
+    function hide() {
+      overlay!.classList.remove('is-visible');
+      visible = false;
+    }
+
+    function onEnter(event: PointerEvent) {
+      if (!enabled() || event.pointerType !== 'mouse') return;
+      const link = event.currentTarget as HTMLAnchorElement;
+      if (magnet && activeLink !== link) releaseMagnet();
+      activeLink = link;
+      linkRect = null;
+      magnet = link.querySelector<HTMLElement>('[data-magnet]');
+      magnet?.classList.add('is-tracking');
+
+      const img = images.get(link.dataset.stickerLink ?? '') ?? null;
+      if (activeImg && activeImg !== img) activeImg.classList.remove('is-active');
+      activeImg = img;
+      place(event.clientX, event.clientY);
+      updatePull(event.clientX, event.clientY);
+      // A missing or failed illustration just leaves the normal link.
+      if (img && isReady(img)) show(img);
+      else hide();
+      kick();
+    }
+
+    function onMove(event: PointerEvent) {
+      if (!activeLink || event.currentTarget !== activeLink) return;
+      place(event.clientX, event.clientY);
+      updatePull(event.clientX, event.clientY);
+      if (activeImg && !visible && isReady(activeImg)) show(activeImg);
+      kick();
+    }
+
+    function onLeave(event: PointerEvent) {
+      if (event.currentTarget !== activeLink) return;
+      activeLink = null;
+      linkRect = null;
+      releaseMagnet();
+      hide();
+    }
+
+    function reset() {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      activeLink = null;
+      releaseMagnet();
+      hide();
+    }
+
+    function applyMode() {
+      if (enabled()) overlay!.hidden = false; // lazy images load only when enabled
+      else {
+        reset();
+        overlay!.hidden = true;
+      }
+    }
+
+    links.forEach((link) => {
+      link.addEventListener('pointerenter', onEnter, { signal });
+      link.addEventListener('pointermove', onMove, { signal });
+      link.addEventListener('pointerleave', onLeave, { signal });
+    });
+    window.addEventListener('scroll', () => (linkRect = null), { passive: true, signal });
+    canHover.addEventListener('change', applyMode, { signal });
+    reduceMotion.addEventListener('change', applyMode, { signal });
+    applyMode();
+
+    return () => {
+      reset();
+      controller.abort();
+    };
+  }
+
+  let cleanup = setup();
+  // Re-initialise cleanly if Astro's client-side navigation is ever enabled.
+  document.addEventListener('astro:before-swap', () => cleanup());
+  document.addEventListener('astro:page-load', () => {
+    cleanup();
+    cleanup = setup();
+  });
+</script>
