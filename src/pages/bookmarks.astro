@@ -1,0 +1,52 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import HomeSection from '../components/HomeSection.astro';
+import { bookmarksByCategory, domainOf, isSampleCollection } from '../data/bookmarks';
+
+const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+
+<PageLayout title="Bookmarks — Tajdid Rahman" description="Interesting corners of the internet: things to read, useful tools and places worth coming back to.">
+  <div class="mx-auto max-w-[68rem] px-5 sm:px-8">
+    <div
+      class="pt-14 pb-16 sm:pt-20 sm:pb-24 md:grid md:grid-cols-[11rem_minmax(0,1fr)] md:gap-x-12 md:pt-24"
+    >
+      <div class="md:col-start-2">
+        <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl">Bookmarks</h1>
+        <p class="mt-8 max-w-[38rem] text-lg leading-relaxed sm:text-xl">
+          Interesting corners of the internet. Things to read, useful tools and places worth coming back to.
+        </p>
+        {
+          isSampleCollection && (
+            <p class="mt-4 text-xs text-muted">Sample collection — personal bookmarks coming soon.</p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  {
+    bookmarksByCategory.map(({ category, bookmarks }) => (
+      <HomeSection id={slug(category)} title={category}>
+        <ul class="[&>li:first-child]:pt-0 [&>li:last-child]:border-b-0 [&>li:last-child]:pb-0">
+          {bookmarks.map((bookmark) => (
+            <li class="border-b border-rule py-5">
+              <a
+                href={bookmark.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group inline-flex items-baseline gap-2 text-lg leading-snug text-accent"
+              >
+                <span class="underline-offset-4 group-hover:underline">{bookmark.title}</span>
+                <span aria-hidden="true" class="text-sm">↗</span>
+                <span class="sr-only">{' (opens in a new tab)'}</span>
+              </a>
+              <p class="mt-1.5 max-w-[38rem] text-[0.9375rem] leading-relaxed">{bookmark.description}</p>
+              <p class="mt-1 text-xs break-all text-muted">{domainOf(bookmark.url)}</p>
+            </li>
+          ))}
+        </ul>
+      </HomeSection>
+    ))
+  }
+</PageLayout>
